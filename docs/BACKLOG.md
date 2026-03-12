@@ -37,6 +37,7 @@ Pour chaque ticket du Sprint Plan, le Lead-Dev ou l'UX doit valider :
 *   [ ] **Sécurité** : AUCUN secret en dur (clés API). Présence d'un `.env.example`.
 *   [ ] **Testabilité** : Les dépendances permettent un lancement local immédiat (`docker compose up`).
 *   [ ] **Documentation** : Le README est à jour.
+*   [ ] **Hygiène du Code** : Suppression systématique de tous les fichiers temporaires, mocks, ou artifacts de test (ex: `.md` de test, dossiers de logs temporaires) avant chaque commit.
 *   [ ] **Fonctionnel** : Le ticket répond strictement aux critères d'acceptation (Gherkin).
 
 ---

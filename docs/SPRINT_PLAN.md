@@ -37,3 +37,8 @@
   - **GIVEN** Un fichier PDF corrompu
   - **WHEN** Le système tente de l'extraire
   - **THEN** Une exception propre est levée et journalisée.
+
+- [ ] **Scenario 4** : Hygiène et Nettoyage (Definition of Done)
+  - **GIVEN** Le Lead-Dev a généré des fichiers de test (Markdown factices, sorties brutes) pour valider Docling
+  - **WHEN** Le développement est terminé et prêt pour le commit final
+  - **THEN** Aucun de ces fichiers temporaires ou factices ne doit être présent dans le dépôt Git (vérification via `.gitignore` ou suppression manuelle).
