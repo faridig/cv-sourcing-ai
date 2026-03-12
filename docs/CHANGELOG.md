@@ -5,6 +5,7 @@ L'historique des modifications apportées au projet, classé par Sprints et par 
 ## [Unreleased]
 
 ### Added
+- Pipeline de Parsing haute fidélité via Docling (`/api/cv/parse/{file_id}`). (Sprint 2)
 - Endpoint d'Upload vers MinIO (`/api/cv/upload`) avec validation PDF. (Sprint 1)
 - Infrastructure locale via Docker Compose (MinIO, Qdrant).
 - Squelette Backend FastAPI avec point de terminaison `/api/health`.
@@ -16,6 +17,11 @@ L'historique des modifications apportées au projet, classé par Sprints et par 
 ### Sprint 1
 - Le Lead-Dev a géré efficacement l'intégration de MinIO avec `boto3`.
 - La double validation (MIME type + extension) renforce la sécurité de l'upload.
-- L'utilisation de `python-multipart` est indispensable pour gérer les fichiers avec FastAPI, un oubli classique qui a été évité ici.
-- L'automatisation de la création du bucket dans le code de stockage simplifie le déploiement.
-- Pour les prochains tickets, conserver cette approche de "Single-Piece Flow" qui permet une validation technique très granulaire.
+- L'utilisation de `python-multipart` est indispensable pour gérer les fichiers avec FastAPI.
+- **Isolation des tests** : Utilisation de fixtures pytest pour nettoyer le stockage MinIO, garantissant des tests reproductibles.
+- **Industrialisation** : Création de `make seed` et `make clean-storage` pour faciliter la démo.
+
+### Sprint 2
+- **Pivot Technologique** : Passage de PyMuPDF à **Docling (IBM)**. Ce choix améliore radicalement l'extraction des CV multi-colonnes, réduisant le risque de "mélange sémantique" pour l'IA.
+- **Poids des Dépendances** : Docling est une librairie puissante mais lourde (Torch). Il est crucial de monitorer l'espace disque et la mémoire en environnement local.
+- **Mocking Stratégique** : L'utilisation de mocks pour Docling dans les tests unitaires permet de valider la logique API sans subir les temps de calcul du modèle.
