@@ -25,6 +25,7 @@ Un outil 100% local, souverain et sécurisé, destiné aux professionnels des Re
 *   **Décision 3** : Le scoring n'est plus un simple chiffre, mais une évaluation multi-critères (Radar "Culture Fit") générée par l'IA.
 *   **Décision 4** : Interface en "Dashboard Unique" (Single Page Application) pour éviter les rechargements de page.
 *   **Décision 5** : L'expérience de "Chat avec le CV" se fera par la voix (Speech-to-Text) pour une ergonomie maximale pour le recruteur.
+*   **Décision 6 (Méthodologie)** : Adoption du modèle "Single-Piece Flow" : **1 seul ticket (PBI) par Sprint**. Cela garantit une maîtrise parfaite, une livraison continue et minimise les risques de régression technique.
 
 ---
 
