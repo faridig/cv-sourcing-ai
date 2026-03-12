@@ -1,6 +1,9 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 import uuid
-from .storage import upload_file
+import os
+import tempfile
+from .storage import upload_file, download_file
+from .parser import parse_pdf
 
 app = FastAPI(title="Sourcing RH API")
 
@@ -30,3 +33,36 @@ async def upload_cv(file: UploadFile = File(...)):
         "filename": filename,
         "path": storage_path
     }
+
+@app.post("/api/cv/parse/{file_id}")
+async def parse_cv(file_id: str):
+    """
+    Récupère un CV depuis MinIO et extrait son contenu textuel structuré via Docling.
+    """
+    object_name = f"{file_id}.pdf"
+    
+    # Créer un fichier temporaire pour Docling
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+        tmp_path = tmp_file.name
+    
+    try:
+        # Téléchargement depuis MinIO
+        download_file(object_name, tmp_path)
+        
+        # Parsing avec Docling
+        markdown_content = parse_pdf(tmp_path)
+        
+        return {
+            "id": file_id,
+            "format": "markdown",
+            "content": markdown_content
+        }
+    except Exception as e:
+        if "NoSuchKey" in str(e):
+            raise HTTPException(status_code=404, detail="Fichier non trouvé dans le stockage.")
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        # Nettoyage du fichier temporaire
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+
