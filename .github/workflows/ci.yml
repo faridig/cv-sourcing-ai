@@ -9,17 +9,6 @@ on:
 jobs:
   backend-tests:
     runs-on: ubuntu-latest
-    services:
-      minio:
-        image: minio/minio
-        ports:
-          - 9000:9000
-          - 9001:9001
-        env:
-          MINIO_ROOT_USER: admin
-          MINIO_ROOT_PASSWORD: password
-        command: server /data --console-address ":9001"
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
@@ -30,12 +19,16 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r backend/requirements.txt
+    - name: Start MinIO
+      run: docker compose up -d minio
     - name: Run tests
       env:
         MINIO_ROOT_USER: admin
         MINIO_ROOT_PASSWORD: password
         MINIO_ENDPOINT: localhost:9000
       run: |
+        # Wait for MinIO to be ready
+        sleep 5
         PYTHONPATH=backend pytest backend/tests
 
   frontend-build:
