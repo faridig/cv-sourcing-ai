@@ -35,3 +35,12 @@ def upload_file(file_content, object_name):
         ContentType="application/pdf"
     )
     return f"{BUCKET_NAME}/{object_name}"
+
+def clear_storage():
+    """Remove all objects from the resumes bucket."""
+    ensure_bucket_exists()
+    response = s3.list_objects_v2(Bucket=BUCKET_NAME)
+    if 'Contents' in response:
+        for obj in response['Contents']:
+            s3.delete_object(Bucket=BUCKET_NAME, Key=obj['Key'])
+    print(f"Bucket {BUCKET_NAME} cleared.")

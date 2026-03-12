@@ -1,9 +1,23 @@
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
+from app.storage import s3, BUCKET_NAME
 import io
 
 client = TestClient(app)
+
+@pytest.fixture(autouse=True)
+def cleanup_minio():
+    """Cleanup the resumes bucket after each test."""
+    yield
+    try:
+        # List all objects in the bucket
+        response = s3.list_objects_v2(Bucket=BUCKET_NAME)
+        if 'Contents' in response:
+            for obj in response['Contents']:
+                s3.delete_object(Bucket=BUCKET_NAME, Key=obj['Key'])
+    except Exception as e:
+        print(f"Cleanup failed: {e}")
 
 def test_upload_pdf_success():
     # Simulate a PDF file
@@ -22,6 +36,11 @@ def test_upload_pdf_success():
     assert "path" in data
     assert data["path"].startswith("resumes/")
     assert data["path"].endswith(".pdf")
+    
+    # Verify file is in MinIO
+    object_key = data["path"].split("/")[-1]
+    s3_obj = s3.get_object(Bucket=BUCKET_NAME, Key=object_key)
+    assert s3_obj["Body"].read() == file_content
 
 def test_upload_non_pdf_rejection():
     # Simulate a text file
