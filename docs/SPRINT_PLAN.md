@@ -1,38 +1,27 @@
-# 🚀 SPRINT EN COURS : Sprint 0 (Walking Skeleton)
+# 🚀 SPRINT EN COURS : Sprint 1 (Endpoint d'Upload)
 
-**Objectif du Sprint** : Mettre en place les fondations techniques du projet (Base de données, Stockage, Backend, Frontend) pour que le développement fonctionnel puisse démarrer sereinement. 
+**Objectif du Sprint** : Assurer la réception et le stockage sécurisé d'un PDF, ce qui est la porte d'entrée incontournable de tout le système.
+
+*(Règle méthodologique : Un seul PBI par Sprint pour une livraison continue et maîtrisée)*
 
 ---
 
-### [PBI-000] Initialisation de l'Infrastructure (Docker & Services)
-**Priorité** : High | **Estimation** : M
+### [PBI-001] Endpoint d'Upload vers MinIO
+**Priorité** : High | **Estimation** : S
 
-**User Story** : "En tant que Développeur, je veux une infrastructure locale conteneurisée (MinIO, Qdrant) et un squelette Back/Front qui communiquent, afin de commencer à coder la logique métier sans me soucier de l'environnement."
+**User Story** : "En tant que Système, je veux recevoir un fichier PDF via une API REST et le stocker en sécurité dans MinIO pour pouvoir le réafficher plus tard à l'utilisateur."
 
-**Dépendances** : Aucune
+**Dépendances** : [PBI-000] (Infrastructure)
 
 **Critères d'Acceptation (Gherkin)** :
-- [ ] **Scenario 1** : Lancement de l'environnement complet
-  - **GIVEN** Un développeur vient de cloner le projet
-  - **WHEN** Il exécute `docker compose up -d` (ou commande équivalente documentée dans un `Makefile`/`README`)
-  - **THEN** Les conteneurs pour MinIO et Qdrant démarrent sans erreur sur leurs ports par défaut respectifs.
+- [ ] **Scenario 1** : Upload d'un fichier valide
+  - **GIVEN** Le service backend et MinIO tournent
+  - **WHEN** Je fais un POST sur `/api/cv/upload` avec un fichier au format PDF
+  - **THEN** Le fichier est sauvegardé dans un bucket MinIO (ex: "resumes")
+  - **AND** L'API me renvoie un code 200 avec l'ID unique ou le chemin du fichier stocké (ex: `{"id": "uuid-v4", "filename": "cv.pdf", "path": "resumes/uuid-v4.pdf"}`).
 
-- [ ] **Scenario 2** : Squelette Backend (FastAPI)
-  - **GIVEN** Le backend FastAPI est lancé (via Uvicorn/Docker)
-  - **WHEN** Je fais un GET sur `/api/health`
-  - **THEN** Je reçois une réponse JSON `{"status": "ok", "message": "Le moteur de Sourcing RH est prêt."}`.
-
-- [ ] **Scenario 3** : Squelette Frontend (React/Vite)
-  - **GIVEN** Le frontend React est lancé
-  - **WHEN** J'accède à `http://localhost:5173` (ou port par défaut Vite)
-  - **THEN** Je vois un titre "Dashboard RH - Sourcing IA" et l'interface s'affiche sans erreur console.
-
-- [ ] **Scenario 4** : Sécurité des secrets
-  - **GIVEN** Le projet nécessite des clés (OpenAI, MinIO admin/password)
-  - **WHEN** Je regarde à la racine du projet
-  - **THEN** Un fichier `.env.example` est présent et documente clairement les variables requises (OPENAI_API_KEY, MINIO_ROOT_USER, MINIO_ROOT_PASSWORD, etc.).
-
-- [ ] **Scenario 5** : Documentation minimale
-  - **GIVEN** Le squelette est en place
-  - **WHEN** Je lis le `README.md`
-  - **THEN** J'y trouve les instructions claires pour lancer le projet (Front, Back, et Services) et configurer le `.env`.
+- [ ] **Scenario 2** : Rejet d'un fichier invalide
+  - **GIVEN** Le service backend est prêt
+  - **WHEN** Je fais un POST sur `/api/cv/upload` avec un fichier qui n'est pas un PDF (ex: une image ou un `.docx`)
+  - **THEN** L'API rejette l'envoi
+  - **AND** Elle renvoie un code d'erreur HTTP 400 avec un message clair : "Seuls les fichiers PDF sont acceptés."

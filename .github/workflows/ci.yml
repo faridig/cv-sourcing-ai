@@ -19,8 +19,16 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r backend/requirements.txt
+    - name: Start MinIO
+      run: docker compose up -d minio
     - name: Run tests
+      env:
+        MINIO_ROOT_USER: admin
+        MINIO_ROOT_PASSWORD: password
+        MINIO_ENDPOINT: localhost:9000
       run: |
+        # Wait for MinIO to be ready
+        sleep 5
         PYTHONPATH=backend pytest backend/tests
 
   frontend-build:

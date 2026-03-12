@@ -25,6 +25,7 @@ Un outil 100% local, souverain et sécurisé, destiné aux professionnels des Re
 *   **Décision 3** : Le scoring n'est plus un simple chiffre, mais une évaluation multi-critères (Radar "Culture Fit") générée par l'IA.
 *   **Décision 4** : Interface en "Dashboard Unique" (Single Page Application) pour éviter les rechargements de page.
 *   **Décision 5** : L'expérience de "Chat avec le CV" se fera par la voix (Speech-to-Text) pour une ergonomie maximale pour le recruteur.
+*   **Décision 6 (Méthodologie)** : Adoption du modèle "Single-Piece Flow" : **1 seul ticket (PBI) par Sprint**. Cela garantit une maîtrise parfaite, une livraison continue et minimise les risques de régression technique.
 
 ---
 
@@ -41,10 +42,10 @@ Pour chaque ticket du Sprint Plan, le Lead-Dev ou l'UX doit valider :
 
 # 📋 BACKLOG GLOBAL (EPICS & PBI)
 
-## Epic 1 : Squelette & Infrastructure DevOps (Sprint 0 - En Cours)
-*   **[PBI-000]** Initialisation du projet (Walking Skeleton), Docker Compose (Qdrant, MinIO), squelettes FastAPI et React.
+## Epic 1 : Squelette & Infrastructure DevOps
+*   **[DONE]** **[PBI-000]** Initialisation du projet (Walking Skeleton), Docker Compose (Qdrant, MinIO), squelettes FastAPI et React.
 
-## Epic 2 : Ingestion et Intelligence Profonde (Parsing)
+## Epic 2 : Ingestion et Intelligence Profonde (Parsing) (Sprint 1 - En Cours)
 *   **[PBI-001]** Endpoint d'Upload : Envoyer un PDF, le stocker dans MinIO.
 *   **[PBI-002]** Pipeline de Parsing : Extraire le texte brut via PyMuPDF.
 *   **[PBI-003]** Structuration IA & Extraction des "Soft Skills Latentes" : L'IA lit les missions, déduit les compétences non écrites (ex: "A organisé un salon de 500p" -> "Gestion de projet événementiel"), et génère le Markdown structuré avec ces métadonnées enrichies.
