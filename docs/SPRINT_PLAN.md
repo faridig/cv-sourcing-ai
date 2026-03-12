@@ -1,6 +1,6 @@
-# 🚀 SPRINT EN COURS : Sprint 2 (Pipeline de Parsing)
+# 🚀 SPRINT EN COURS : Sprint 2 (Pipeline de Parsing haute fidélité)
 
-**Objectif du Sprint** : Extraire le texte brut des PDF stockés dans MinIO.
+**Objectif du Sprint** : Extraire le texte des PDF stockés dans MinIO en respectant la mise en page (colonnes, titres) grâce à Docling.
 
 *(Règle méthodologique : Un seul PBI par Sprint pour une livraison continue et maîtrisée)*
 
@@ -14,21 +14,26 @@
 
 ---
 
-### [PBI-002] Pipeline de Parsing (Extraction de texte brute)
+### [PBI-002] Pipeline de Parsing (Extraction haute fidélité via Docling)
 **Priorité** : High | **Estimation** : S
 
-**User Story** : "En tant que Système, je veux extraire tout le texte d'un fichier PDF (récupéré depuis MinIO) de manière rapide et brute pour le préparer à l'analyse IA."
+**User Story** : "En tant que Système, je veux extraire le texte d'un fichier PDF (récupéré depuis MinIO) en conservant la structure logique du document (colonnes, hiérarchie) grâce à Docling, afin de faciliter l'analyse ultérieure par l'IA."
 
 **Dépendances** : [PBI-001] (Upload MinIO)
 
 **Critères d'Acceptation (Gherkin)** :
-- [ ] **Scenario 1** : Extraction de texte réussie
-  - **GIVEN** L'ID ou le chemin d'un PDF valide stocké dans MinIO (suite au PBI-001)
+- [ ] **Scenario 1** : Extraction structurée réussie
+  - **GIVEN** L'ID ou le chemin d'un PDF valide stocké dans MinIO
   - **WHEN** Le système (backend) appelle le service de parsing avec cet ID
   - **THEN** Le PDF est récupéré depuis MinIO
-  - **AND** `PyMuPDF` (`fitz`) l'analyse et retourne une chaîne de caractères (string) contenant tout le texte du CV.
+  - **AND** **Docling** l'analyse et retourne une représentation Markdown ou texte qui respecte l'ordre de lecture des colonnes.
 
-- [ ] **Scenario 2** : Gestion des erreurs de lecture
-  - **GIVEN** Un PDF corrompu ou illisible
+- [ ] **Scenario 2** : Performance et Robustesse
+  - **GIVEN** Un CV avec une mise en page complexe (2 ou 3 colonnes)
+  - **WHEN** Docling traite le fichier
+  - **THEN** Le texte extrait ne mélange pas les lignes des colonnes adjacentes.
+
+- [ ] **Scenario 3** : Gestion des erreurs
+  - **GIVEN** Un fichier PDF corrompu
   - **WHEN** Le système tente de l'extraire
-  - **THEN** Une exception propre est levée et journalisée, évitant le crash complet du système.
+  - **THEN** Une exception propre est levée et journalisée.

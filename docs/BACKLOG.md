@@ -11,7 +11,7 @@ Un outil 100% local, souverain et sécurisé, destiné aux professionnels des Re
 *   **Langage Principal** : Python 3.11+.
 *   **Framework Backend** : FastAPI (Asynchrone, performant, typage fort).
 *   **Framework Frontend** : React (Vite) + Tailwind CSS + Recharts (Pour les graphiques Radar) + Web Speech API (Microphone natif).
-*   **Parsing PDF** : PyMuPDF (Extraction rapide du texte brut).
+*   **Parsing PDF** : Docling (IBM) - Pour une extraction haute fidélité respectant les colonnes et la mise en page.
 *   **Structuration & Analyse IA** : OpenAI API (Modèles : `gpt-4o-mini` pour le texte, `whisper-1` pour la voix si nécessaire, ou l'API Web Speech native du navigateur).
 *   **Stockage de Fichiers (CV)** : MinIO (S3-compatible, hébergé localement).
 *   **Base de Données Vectorielle** : Qdrant (Recherche sémantique, hébergée localement).
@@ -20,12 +20,13 @@ Un outil 100% local, souverain et sécurisé, destiné aux professionnels des Re
 
 # 🏛️ JOURNAL DES DÉCISIONS (ADR)
 
-*   **Décision 1** : Utilisation de `gpt-4o-mini` pour transformer le texte brut issu de `PyMuPDF` en Markdown propre avec métadonnées.
+*   **Décision 1** : Utilisation de `gpt-4o-mini` pour transformer le texte brut issu de `Docling` en Markdown propre avec métadonnées.
 *   **Décision 2** : Utilisation de MinIO en local pour stocker les PDF originaux afin de garantir la confidentialité des données RH.
 *   **Décision 3** : Le scoring n'est plus un simple chiffre, mais une évaluation multi-critères (Radar "Culture Fit") générée par l'IA.
 *   **Décision 4** : Interface en "Dashboard Unique" (Single Page Application) pour éviter les rechargements de page.
 *   **Décision 5** : L'expérience de "Chat avec le CV" se fera par la voix (Speech-to-Text) pour une ergonomie maximale pour le recruteur.
 *   **Décision 6 (Méthodologie)** : Adoption du modèle "Single-Piece Flow" : **1 seul ticket (PBI) par Sprint**. Cela garantit une maîtrise parfaite, une livraison continue et minimise les risques de régression technique.
+*   **Décision 7 (Technique)** : Remplacement de `PyMuPDF` par **Docling (IBM)** pour l'extraction de texte. Ce choix garantit que les CV multi-colonnes sont lus dans le bon ordre sémantique avant l'analyse par l'IA.
 
 ---
 
@@ -47,8 +48,8 @@ Pour chaque ticket du Sprint Plan, le Lead-Dev ou l'UX doit valider :
 
 ## Epic 2 : Ingestion et Intelligence Profonde (Parsing)
 *   **[DONE]** **[PBI-001]** Endpoint d'Upload : Envoyer un PDF, le stocker dans MinIO.
-*   **[PBI-002]** Pipeline de Parsing (Sprint 2 - En Cours) : Extraire le texte brut via PyMuPDF.
-*   **[PBI-003]** Structuration IA & Extraction des "Soft Skills Latentes" : L'IA lit les missions, déduit les compétences non écrites (ex: "A organisé un salon de 500p" -> "Gestion de projet événementiel"), et génère le Markdown structuré avec ces métadonnées enrichies.
+*   **[PBI-002]** Pipeline de Parsing (Sprint 2 - En Cours) : Extraire le texte structuré via Docling.
+*   **[PBI-003]** Structuration IA & Extraction des "Soft Skills Latentes" : L'IA lit les données issues de Docling, déduit les compétences non écrites, et génère le Markdown final enrichi.
 *   **[PBI-004]** Vectorisation : Convertir le Markdown enrichi en embeddings et les insérer dans Qdrant.
 
 ## Epic 3 : Moteur de Recherche RH et Radar Multi-critères
