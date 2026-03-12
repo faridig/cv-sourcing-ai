@@ -9,6 +9,22 @@ on:
 jobs:
   backend-tests:
     runs-on: ubuntu-latest
+    services:
+      minio:
+        image: minio/minio
+        ports:
+          - 9000:9000
+          - 9001:9001
+        env:
+          MINIO_ROOT_USER: admin
+          MINIO_ROOT_PASSWORD: password
+        options: >-
+          --health-cmd "curl -f http://localhost:9000/minio/health/live"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        command: server /data --console-address ":9001"
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
@@ -20,6 +36,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r backend/requirements.txt
     - name: Run tests
+      env:
+        MINIO_ROOT_USER: admin
+        MINIO_ROOT_PASSWORD: password
+        MINIO_ENDPOINT: localhost:9000
       run: |
         PYTHONPATH=backend pytest backend/tests
 
