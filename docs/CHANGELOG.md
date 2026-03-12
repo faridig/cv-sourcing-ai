@@ -5,6 +5,7 @@ L'historique des modifications apportées au projet, classé par Sprints et par 
 ## [Unreleased]
 
 ### Added
+- Endpoint d'Upload vers MinIO (`/api/cv/upload`) avec validation PDF. (Sprint 1)
 - Infrastructure locale via Docker Compose (MinIO, Qdrant).
 - Squelette Backend FastAPI avec point de terminaison `/api/health`.
 - Squelette Frontend React/Vite (TypeScript).

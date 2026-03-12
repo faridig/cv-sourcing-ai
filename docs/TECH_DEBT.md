@@ -4,8 +4,8 @@ Journal de la dette technique. Toute décision "rapide" ou divergence par rappor
 
 ---
 
-### [Date] - [Ticket lié]
-**Dette contractée** :
-**Raison** :
-**Impact** :
-**Action future à planifier** :
+### [2026-03-12] - [Sprint 1]
+**Dette contractée** : Fichiers liés aux outils internes (`.opencode`, `openrtk`) commités par erreur au Sprint 0 avant l'ajout au `.gitignore`.
+**Raison** : Oubli initial dans le `.gitignore`. Les dossiers sont ignorés maintenant, mais toujours suivis par l'index Git.
+**Impact** : Dépôt pollué, risque de conflits futurs avec les sessions locales.
+**Action future à planifier** : Exécuter `git rm -r --cached .opencode openrtk` en début de Sprint 2 (tâche assignée).

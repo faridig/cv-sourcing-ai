@@ -45,9 +45,9 @@ Pour chaque ticket du Sprint Plan, le Lead-Dev ou l'UX doit valider :
 ## Epic 1 : Squelette & Infrastructure DevOps
 *   **[DONE]** **[PBI-000]** Initialisation du projet (Walking Skeleton), Docker Compose (Qdrant, MinIO), squelettes FastAPI et React.
 
-## Epic 2 : Ingestion et Intelligence Profonde (Parsing) (Sprint 1 - En Cours)
-*   **[PBI-001]** Endpoint d'Upload : Envoyer un PDF, le stocker dans MinIO.
-*   **[PBI-002]** Pipeline de Parsing : Extraire le texte brut via PyMuPDF.
+## Epic 2 : Ingestion et Intelligence Profonde (Parsing)
+*   **[DONE]** **[PBI-001]** Endpoint d'Upload : Envoyer un PDF, le stocker dans MinIO.
+*   **[PBI-002]** Pipeline de Parsing (Sprint 2 - En Cours) : Extraire le texte brut via PyMuPDF.
 *   **[PBI-003]** Structuration IA & Extraction des "Soft Skills Latentes" : L'IA lit les missions, déduit les compétences non écrites (ex: "A organisé un salon de 500p" -> "Gestion de projet événementiel"), et génère le Markdown structuré avec ces métadonnées enrichies.
 *   **[PBI-004]** Vectorisation : Convertir le Markdown enrichi en embeddings et les insérer dans Qdrant.
 

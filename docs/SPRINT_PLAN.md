@@ -1,27 +1,34 @@
-# 🚀 SPRINT EN COURS : Sprint 1 (Endpoint d'Upload)
+# 🚀 SPRINT EN COURS : Sprint 2 (Pipeline de Parsing)
 
-**Objectif du Sprint** : Assurer la réception et le stockage sécurisé d'un PDF, ce qui est la porte d'entrée incontournable de tout le système.
+**Objectif du Sprint** : Extraire le texte brut des PDF stockés dans MinIO.
 
 *(Règle méthodologique : Un seul PBI par Sprint pour une livraison continue et maîtrisée)*
 
 ---
 
-### [PBI-001] Endpoint d'Upload vers MinIO
+### [CHORE] Dette Technique : Nettoyage du Git Cache
+**Priorité** : Critical | **Estimation** : XS
+**Tâche préalable obligatoire pour le Lead-Dev avant de commencer le PBI-002.**
+- Exécuter la commande `git rm -r --cached .opencode openrtk` pour retirer ces dossiers du suivi Git (ils avaient été poussés lors d'un sprint précédent avant d'être ajoutés au `.gitignore`).
+- Commiter cette correction (`fix(git): nettoyage du cache des dossiers ignorés`).
+
+---
+
+### [PBI-002] Pipeline de Parsing (Extraction de texte brute)
 **Priorité** : High | **Estimation** : S
 
-**User Story** : "En tant que Système, je veux recevoir un fichier PDF via une API REST et le stocker en sécurité dans MinIO pour pouvoir le réafficher plus tard à l'utilisateur."
+**User Story** : "En tant que Système, je veux extraire tout le texte d'un fichier PDF (récupéré depuis MinIO) de manière rapide et brute pour le préparer à l'analyse IA."
 
-**Dépendances** : [PBI-000] (Infrastructure)
+**Dépendances** : [PBI-001] (Upload MinIO)
 
 **Critères d'Acceptation (Gherkin)** :
-- [ ] **Scenario 1** : Upload d'un fichier valide
-  - **GIVEN** Le service backend et MinIO tournent
-  - **WHEN** Je fais un POST sur `/api/cv/upload` avec un fichier au format PDF
-  - **THEN** Le fichier est sauvegardé dans un bucket MinIO (ex: "resumes")
-  - **AND** L'API me renvoie un code 200 avec l'ID unique ou le chemin du fichier stocké (ex: `{"id": "uuid-v4", "filename": "cv.pdf", "path": "resumes/uuid-v4.pdf"}`).
+- [ ] **Scenario 1** : Extraction de texte réussie
+  - **GIVEN** L'ID ou le chemin d'un PDF valide stocké dans MinIO (suite au PBI-001)
+  - **WHEN** Le système (backend) appelle le service de parsing avec cet ID
+  - **THEN** Le PDF est récupéré depuis MinIO
+  - **AND** `PyMuPDF` (`fitz`) l'analyse et retourne une chaîne de caractères (string) contenant tout le texte du CV.
 
-- [ ] **Scenario 2** : Rejet d'un fichier invalide
-  - **GIVEN** Le service backend est prêt
-  - **WHEN** Je fais un POST sur `/api/cv/upload` avec un fichier qui n'est pas un PDF (ex: une image ou un `.docx`)
-  - **THEN** L'API rejette l'envoi
-  - **AND** Elle renvoie un code d'erreur HTTP 400 avec un message clair : "Seuls les fichiers PDF sont acceptés."
+- [ ] **Scenario 2** : Gestion des erreurs de lecture
+  - **GIVEN** Un PDF corrompu ou illisible
+  - **WHEN** Le système tente de l'extraire
+  - **THEN** Une exception propre est levée et journalisée, évitant le crash complet du système.
