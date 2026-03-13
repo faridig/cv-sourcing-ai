@@ -17,6 +17,7 @@ def mock_analysis_data():
         tech_stack=TechStack(main=["Python"], secondary=[], veille=[]),
         mobility="Paris",
         weak_signals="None",
+        location="Paris, 75000",
         summary="A test CV"
     )
 

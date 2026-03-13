@@ -6,18 +6,19 @@ from app.models import CVAnalysis
 @pytest.fixture
 def mock_openai_response():
     mock_json = {
-        "career_dynamics": {"seniority": "Senior", "progression": "Consistent growth in backend roles"},
+        "career_dynamics": {"seniority": "Sénior", "progression": "Croissance constante dans des rôles backend"},
         "culture_fit": "Agile, Startup",
-        "outreach": "Active on GitHub, 50 stars on a project",
-        "languages": ["French (Native)", "English (Professional)"],
+        "outreach": "Actif sur GitHub, 50 étoiles sur un projet",
+        "languages": ["Français (Maternel)", "Anglais (Professionnel)"],
         "soft_skills": {"leadership": 8, "autonomy": 9, "teamwork": 7, "communication": 8},
         "tech_stack": {"main": ["Python", "FastAPI"], "secondary": ["Docker", "PostgreSQL"], "veille": ["Rust"]},
-        "mobility": "Open to remote, based in Paris",
-        "weak_signals": "Coherent career path, no major gaps",
-        "summary": "Experienced Python Developer with strong backend skills."
+        "mobility": "Ouvert au télétravail, basé à Paris",
+        "weak_signals": "Parcours cohérent, pas de lacunes majeures",
+        "location": "Paris, 75001",
+        "summary": "Développeur Python expérimenté avec de solides compétences en backend."
     }
     
-    markdown_content = "# Dossier Augmenté de Test\n\n- **Séniorité**: Senior\n- **Stack**: Python, FastAPI"
+    markdown_content = "# Dossier Augmenté de Test\n\n- **Séniorité**: Sénior\n- **Localisation**: Paris, 75001"
     
     mock_content = f"""```json
     {import_json_as_string(mock_json)}
@@ -47,8 +48,9 @@ def test_analyze_cv_success(mock_openai_class, mock_openai_response):
     
     # Assert
     assert isinstance(analysis, CVAnalysis)
-    assert analysis.career_dynamics.seniority == "Senior"
+    assert analysis.career_dynamics.seniority == "Sénior"
     assert analysis.soft_skills.leadership == 8
+    assert analysis.location == "Paris, 75001"
     assert "Dossier Augmenté" in markdown
     assert "Python" in analysis.tech_stack.main
 
@@ -64,6 +66,7 @@ def test_analyze_cv_missing_info(mock_openai_class):
         "tech_stack": {"main": [], "secondary": [], "veille": []},
         "mobility": "Non déterminé",
         "weak_signals": "Aucun signal détecté",
+        "location": "Non déterminé",
         "summary": "CV trop court pour analyse."
     }
     mock_content = f"{import_json_as_string(mock_json)} ---MARKDOWN--- # Dossier Vide"

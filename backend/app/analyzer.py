@@ -18,29 +18,31 @@ class CVAnalyzer:
 
     def analyze_cv(self, cv_text: str) -> Tuple[CVAnalysis, str]:
         """
-        Analyzes the CV text using LLM and returns both structured data and a Markdown dossier.
+        Analyse le texte du CV via LLM et retourne les données structurées et un dossier Markdown.
         """
         prompt = f"""
-        You are an expert HR Auditor. Your task is to analyze the following CV text and provide a structured analysis and an "Augmented Dossier" in Markdown.
+        Tu es un Auditeur RH Expert. Ta tâche est d'analyser le texte du CV suivant et de fournir une analyse structurée ainsi qu'un "Dossier Augmenté" en Markdown.
         
-        ### CV TEXT:
+        ### TEXTE DU CV :
         {cv_text}
         
-        ### INSTRUCTIONS:
-        Analyze the CV across these 8 axes:
-        1. Career Dynamics (Seniority/Progression)
-        2. Culture Fit (Startup/Grand Compte/Agile)
-        3. Outreach (Open Source/Side Projects/Engagement)
-        4. Languages (Contextual usage)
-        5. Soft Skills (Scores 0-10 on Leadership, Autonomy, Teamwork, Communication)
-        6. Tech Stack (Main, Secondary, Monitoring/Veille)
-        7. Mobility & Teleworking
-        8. Weak Signals (Consistency audit)
+        ### INSTRUCTIONS :
+        Analyse le CV selon ces 9 axes :
+        1. Dynamique de Carrière (Séniorité/Progression)
+        2. Culture Fit (Startup, Grand Compte, Agile, etc.)
+        3. Rayonnement (Open Source, Side Projects, Engagement)
+        4. Langues (Usage contextuel)
+        5. Soft Skills (Scores 0-10 sur Leadership, Autonomie, Travail d'équipe, Communication)
+        6. Stack Technologique (Principal, Secondaire, Veille)
+        7. Mobilité & Télétravail
+        8. Signaux Faibles (Audit de cohérence)
+        9. Localisation (Ville de résidence, Code Postal)
         
-        ### OUTPUT FORMAT:
-        You must return a JSON object that matches the following structure, followed by a separator "---MARKDOWN---" and then the Markdown dossier.
+        ### FORMAT DE SORTIE :
+        Tu dois répondre EXCLUSIVEMENT en Français.
+        Tu dois retourner un objet JSON correspondant à la structure suivante, suivi du séparateur "---MARKDOWN---", puis le dossier en Markdown.
         
-        JSON Structure:
+        Structure JSON :
         {{
             "career_dynamics": {{"seniority": "...", "progression": "..."}},
             "culture_fit": "...",
@@ -50,17 +52,18 @@ class CVAnalyzer:
             "tech_stack": {{"main": ["..."], "secondary": ["..."], "veille": ["..."]}},
             "mobility": "...",
             "weak_signals": "...",
+            "location": "...",
             "summary": "..."
         }}
         
-        Important: If information is missing, do not hallucinate. Use "Non déterminé" or "Données insuffisantes".
+        Important : Si une information est manquante, n'hallucine pas. Utilise "Non déterminé" ou "Données insuffisantes".
         """
 
         try:
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "You are a professional HR assistant specializing in technical CV analysis."},
+                    {"role": "system", "content": "Tu es un assistant RH professionnel spécialisé dans l'analyse technique de CV. Tu t'exprimes exclusivement en Français."},
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.1

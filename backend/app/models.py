@@ -25,4 +25,5 @@ class CVAnalysis(BaseModel):
     tech_stack: TechStack
     mobility: str = Field(description="Mobility and Teleworking preferences")
     weak_signals: str = Field(description="Consistency audit and weak signals")
+    location: str = Field(description="Residence city and postal code")
     summary: str = Field(description="Short executive summary")
