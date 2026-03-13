@@ -3,6 +3,7 @@ import os
 import tempfile
 import logging
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from contextlib import asynccontextmanager
 from botocore.exceptions import ClientError
 from .storage import upload_file, download_file
 from .parser import parse_pdf, DOCLING_AVAILABLE
@@ -12,28 +13,36 @@ from .analyzer import CVAnalyzer
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Sourcing RH API")
-
 # Instance globale de l'analyzer
 analyzer = None
 
-@app.on_event("startup")
-async def startup_event():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     """
-    Diagnostic au démarrage pour vérifier les dépendances critiques.
+    Gestionnaire de cycle de vie pour initialiser les ressources au démarrage
+    et les nettoyer à la fermeture.
     """
     global analyzer
-    logger.info("Démarrage du serveur Sourcing RH...")
+    logger.info("Démarrage du serveur Sourcing RH (via lifespan)...")
+    
+    # Diagnostics Docling
     if DOCLING_AVAILABLE:
         logger.info("Diagnostic : Docling est disponible.")
     else:
-        logger.error("Diagnostic : Docling est INDISPONIBLE. Le parsing de CV ne fonctionnera pas.")
+        logger.error("Diagnostic : Docling est INDISPONIBLE.")
     
+    # Initialisation Analyzer
     try:
         analyzer = CVAnalyzer()
         logger.info("Diagnostic : Analyzer IA initialisé.")
     except Exception as e:
-        logger.warning(f"Diagnostic : Analyzer IA non initialisé (OPENAI_API_KEY manquante ?) : {str(e)}")
+        logger.warning(f"Diagnostic : Analyzer IA non initialisé : {str(e)}")
+    
+    yield
+    
+    logger.info("Fermeture du serveur Sourcing RH...")
+
+app = FastAPI(title="Sourcing RH API", lifespan=lifespan)
 
 @app.get("/api/health")
 async def health_check():

@@ -1,6 +1,6 @@
 import pytest
 import logging
-from backend.app.parser import DOCLING_AVAILABLE
+from app.parser import DOCLING_AVAILABLE
 
 logger = logging.getLogger(__name__)
 
