@@ -3,30 +3,80 @@ import os
 import tempfile
 import logging
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from contextlib import asynccontextmanager
 from botocore.exceptions import ClientError
 from .storage import upload_file, download_file
 from .parser import parse_pdf, DOCLING_AVAILABLE
+from .analyzer import CVAnalyzer
 
 # Configuration du logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Sourcing RH API")
+# Instance globale de l'analyzer
+analyzer = None
 
-@app.on_event("startup")
-async def startup_event():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     """
-    Diagnostic au démarrage pour vérifier les dépendances critiques.
+    Gestionnaire de cycle de vie pour initialiser les ressources au démarrage
+    et les nettoyer à la fermeture.
     """
-    logger.info("Démarrage du serveur Sourcing RH...")
+    global analyzer
+    logger.info("Démarrage du serveur Sourcing RH (via lifespan)...")
+    
+    # Diagnostics Docling
     if DOCLING_AVAILABLE:
         logger.info("Diagnostic : Docling est disponible.")
     else:
-        logger.error("Diagnostic : Docling est INDISPONIBLE. Le parsing de CV ne fonctionnera pas.")
+        logger.error("Diagnostic : Docling est INDISPONIBLE.")
+    
+    # Initialisation Analyzer
+    try:
+        analyzer = CVAnalyzer()
+        logger.info("Diagnostic : Analyzer IA initialisé.")
+    except Exception as e:
+        logger.warning(f"Diagnostic : Analyzer IA non initialisé : {str(e)}")
+    
+    yield
+    
+    logger.info("Fermeture du serveur Sourcing RH...")
+
+app = FastAPI(title="Sourcing RH API", lifespan=lifespan)
 
 @app.get("/api/health")
 async def health_check():
     return {"status": "ok", "message": "Le moteur de Sourcing RH est prêt."}
+
+@app.post("/api/cv/analyze/{file_id}")
+async def analyze_cv_endpoint(file_id: str):
+    """
+    Extrait le texte via Docling et l'analyse via l'IA pour générer un dossier augmenté.
+    """
+    if not analyzer:
+        raise HTTPException(status_code=503, detail="Service d'analyse IA non configuré.")
+
+    object_name = f"{file_id}.pdf"
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+        tmp_path = tmp_file.name
+    
+    try:
+        download_file(object_name, tmp_path)
+        markdown_text = parse_pdf(tmp_path)
+        
+        analysis_data, augmented_markdown = analyzer.analyze_cv(markdown_text)
+        
+        return {
+            "id": file_id,
+            "analysis": analysis_data,
+            "dossier_markdown": augmented_markdown
+        }
+    except Exception as e:
+        logger.exception(f"Erreur lors de l'analyse du CV {file_id}")
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
 
 @app.post("/api/cv/upload")
 async def upload_cv(file: UploadFile = File(...)):

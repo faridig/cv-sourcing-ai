@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
-from backend.app.main import app
-from backend.app.storage import s3, BUCKET_NAME
+from app.main import app
+from app.storage import s3, BUCKET_NAME
 import io
 
 client = TestClient(app)
