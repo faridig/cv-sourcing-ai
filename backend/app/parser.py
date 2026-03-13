@@ -1,9 +1,3 @@
-try:
-    from docling.document_converter import DocumentConverter
-    DOCLING_AVAILABLE = True
-except ImportError:
-    DOCLING_AVAILABLE = False
-
 import logging
 import os
 
@@ -11,12 +5,29 @@ import os
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+try:
+    from docling.document_converter import DocumentConverter
+    DOCLING_AVAILABLE = True
+    logger.info("Docling est correctement importé.")
+except ImportError as e:
+    class DocumentConverter:
+        def __init__(self, *args, **kwargs):
+            raise RuntimeError("Docling n'est pas installé.")
+    DOCLING_AVAILABLE = False
+    logger.warning("Docling désactivé : %s", str(e), exc_info=True)
+except Exception as e:
+    class DocumentConverter:
+        def __init__(self, *args, **kwargs):
+            raise RuntimeError("Docling n'est pas disponible.")
+    DOCLING_AVAILABLE = False
+    logger.error("Erreur inattendue lors de l'import de Docling : %s", str(e), exc_info=True)
+
 def parse_pdf(pdf_path: str) -> str:
     """
     Convertit un fichier PDF en Markdown en utilisant Docling.
     """
-    if not DOCLING_AVAILABLE:
-        logger.error("Docling n'est pas installé.")
+    if not DOCLING_AVAILABLE or DocumentConverter is None:
+        logger.error("Docling n'est pas disponible.")
         raise RuntimeError("Docling n'est pas disponible sur ce système.")
 
     if not os.path.exists(pdf_path):

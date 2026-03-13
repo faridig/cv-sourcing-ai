@@ -1,11 +1,28 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
 import uuid
 import os
 import tempfile
+import logging
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from botocore.exceptions import ClientError
 from .storage import upload_file, download_file
-from .parser import parse_pdf
+from .parser import parse_pdf, DOCLING_AVAILABLE
+
+# Configuration du logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Sourcing RH API")
+
+@app.on_event("startup")
+async def startup_event():
+    """
+    Diagnostic au démarrage pour vérifier les dépendances critiques.
+    """
+    logger.info("Démarrage du serveur Sourcing RH...")
+    if DOCLING_AVAILABLE:
+        logger.info("Diagnostic : Docling est disponible.")
+    else:
+        logger.error("Diagnostic : Docling est INDISPONIBLE. Le parsing de CV ne fonctionnera pas.")
 
 @app.get("/api/health")
 async def health_check():
@@ -57,12 +74,17 @@ async def parse_cv(file_id: str):
             "format": "markdown",
             "content": markdown_content
         }
-    except Exception as e:
-        if "NoSuchKey" in str(e):
+    except ClientError as e:
+        # Gestion propre des erreurs MinIO/S3 (ex: 404 Not Found)
+        logger.error(f"Erreur de stockage pour {file_id}: {str(e)}")
+        if e.response['Error']['Code'] in ['404', 'NoSuchKey']:
             raise HTTPException(status_code=404, detail="Fichier non trouvé dans le stockage.")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Erreur lors de la communication avec le stockage.")
+    except Exception as e:
+        # Log de l'exception complète pour l'observabilité
+        logger.exception(f"Erreur interne lors du parsing du CV {file_id}")
+        raise HTTPException(status_code=500, detail="Une erreur interne est survenue lors du parsing.")
     finally:
         # Nettoyage du fichier temporaire
         if os.path.exists(tmp_path):
             os.remove(tmp_path)
-
