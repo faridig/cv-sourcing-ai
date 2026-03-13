@@ -88,4 +88,3 @@ async def parse_cv(file_id: str):
         # Nettoyage du fichier temporaire
         if os.path.exists(tmp_path):
             os.remove(tmp_path)
-

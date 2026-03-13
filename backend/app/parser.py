@@ -22,7 +22,6 @@ except Exception as e:
     DOCLING_AVAILABLE = False
     logger.error("Erreur inattendue lors de l'import de Docling : %s", str(e), exc_info=True)
 
-
 def parse_pdf(pdf_path: str) -> str:
     """
     Convertit un fichier PDF en Markdown en utilisant Docling.
