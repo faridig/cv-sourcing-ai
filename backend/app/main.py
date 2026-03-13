@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 import uuid
 import os
 import tempfile
+from botocore.exceptions import ClientError
 from .storage import upload_file, download_file
 from .parser import parse_pdf
 
@@ -57,10 +58,14 @@ async def parse_cv(file_id: str):
             "format": "markdown",
             "content": markdown_content
         }
-    except Exception as e:
-        if "NoSuchKey" in str(e):
+    except ClientError as e:
+        # Gestion propre des erreurs MinIO/S3 (ex: 404 Not Found)
+        if e.response['Error']['Code'] in ['404', 'NoSuchKey']:
             raise HTTPException(status_code=404, detail="Fichier non trouvé dans le stockage.")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Erreur lors de la communication avec le stockage.")
+    except Exception as e:
+        # Éviter de renvoyer l'erreur brute (fuite d'information)
+        raise HTTPException(status_code=500, detail="Une erreur interne est survenue lors du parsing.")
     finally:
         # Nettoyage du fichier temporaire
         if os.path.exists(tmp_path):
