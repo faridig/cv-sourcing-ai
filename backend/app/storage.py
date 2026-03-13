@@ -36,6 +36,11 @@ def upload_file(file_content, object_name):
     )
     return f"{BUCKET_NAME}/{object_name}"
 
+def download_file(object_name, download_path):
+    ensure_bucket_exists()
+    s3.download_file(BUCKET_NAME, object_name, download_path)
+    return download_path
+
 def clear_storage():
     """Remove all objects from the resumes bucket."""
     ensure_bucket_exists()
