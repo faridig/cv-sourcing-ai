@@ -3,7 +3,7 @@ import json
 import logging
 from typing import Tuple, Optional
 from openai import OpenAI
-from .models import CVAnalysis
+from .models import AnalyseCV
 
 logger = logging.getLogger(__name__)
 
@@ -16,44 +16,51 @@ class CVAnalyzer:
         self.client = OpenAI(api_key=self.api_key)
         self.model = "gpt-4o-mini"
 
-    def analyze_cv(self, cv_text: str) -> Tuple[CVAnalysis, str]:
+    def analyze_cv(self, cv_text: str) -> Tuple[AnalyseCV, str]:
         """
         Analyse le texte du CV via LLM et retourne les données structurées et un dossier Markdown.
         """
         prompt = f"""
-        Tu es un Auditeur RH Expert. Ta tâche est d'analyser le texte du CV suivant et de fournir une analyse structurée ainsi qu'un "Dossier Augmenté" en Markdown.
+        Tu es un Auditeur RH Expert et Chasseur de Têtes Senior. Ta tâche est d'analyser le texte du CV suivant avec une profondeur analytique maximale.
         
         ### TEXTE DU CV :
         {cv_text}
         
-        ### INSTRUCTIONS :
-        Analyse le CV selon ces 9 axes :
-        1. Dynamique de Carrière (Séniorité/Progression)
-        2. Culture Fit (Startup, Grand Compte, Agile, etc.)
-        3. Rayonnement (Open Source, Side Projects, Engagement)
-        4. Langues (Usage contextuel)
-        5. Soft Skills (Scores 0-10 sur Leadership, Autonomie, Travail d'équipe, Communication)
-        6. Stack Technologique (Principal, Secondaire, Veille)
-        7. Mobilité & Télétravail
-        8. Signaux Faibles (Audit de cohérence)
-        9. Localisation (Ville de résidence, Code Postal)
-        
+        ### MISSIONS D'AUDIT (LES 5 PILIERS) :
+        1. **Chronologie Non-Linéaire** : Analyse les dates pour repérer les chevauchements, les retours d'expérience ou les progressions atypiques.
+        2. **Impact KPI** : Identifie les résultats concrets, les chiffres et les verbes d'action. Ne te contente pas de lister les tâches.
+        3. **Hiérarchie Hard/Transverse** : Distingue clairement les expertises techniques (Hard) des compétences transversales (Méthodologies, Management).
+        4. **Détection fine de Signaux Faibles** : Repère les trous de plus de 6 mois, les changements fréquents d'entreprise ou les incohérences sémantiques.
+        5. **Expertise Sectorielle** : Évalue la pertinence du candidat par rapport à ses environnements passés (Startup vs Grand Compte).
+
         ### FORMAT DE SORTIE :
         Tu dois répondre EXCLUSIVEMENT en Français.
-        Tu dois retourner un objet JSON correspondant à la structure suivante, suivi du séparateur "---MARKDOWN---", puis le dossier en Markdown.
+        Tu dois retourner un objet JSON correspondant à la structure définie ci-dessous, suivi du séparateur "---MARKDOWN---", puis un "Dossier Augmenté" détaillé en Markdown.
         
-        Structure JSON :
+        Structure JSON attendue :
         {{
-            "career_dynamics": {{"seniority": "...", "progression": "..."}},
-            "culture_fit": "...",
-            "outreach": "...",
-            "languages": ["...", "..."],
-            "soft_skills": {{"leadership": 0-10, "autonomy": 0-10, "teamwork": 0-10, "communication": 0-10}},
-            "tech_stack": {{"main": ["..."], "secondary": ["..."], "veille": ["..."]}},
-            "mobility": "...",
-            "weak_signals": "...",
-            "location": "...",
-            "summary": "..."
+            "dynamique_carriere": {{
+                "seniorite": "Junior|Intermédiaire|Sénior|Lead|Expert", 
+                "progression": "Analyse détaillée de la progression et chronologie"
+            }},
+            "fit_culturel": "Analyse de l'environnement idéal (Startup, Agile, Grand Compte)",
+            "rayonnement": "Engagement communautaire, Open Source, Side Projects, Conférences",
+            "langues": ["Langue (Niveau/Contexte)", "..."],
+            "competences_douces": {{
+                "leadership": 0-10, 
+                "autonomie": 0-10, 
+                "travail_equipe": 0-10, 
+                "communication": 0-10
+            }},
+            "stack_technique": {{
+                "principale": ["..."], 
+                "secondaire": ["..."], 
+                "veille": ["..."]
+            }},
+            "mobilite": "Zone géographique et télétravail",
+            "signaux_faibles": "Audit critique : trous, incohérences, points de vigilance",
+            "localisation": "Ville, Code Postal",
+            "resume": "Synthèse executive à fort impact"
         }}
         
         Important : Si une information est manquante, n'hallucine pas. Utilise "Non déterminé" ou "Données insuffisantes".
@@ -63,7 +70,14 @@ class CVAnalyzer:
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "Tu es un assistant RH professionnel spécialisé dans l'analyse technique de CV. Tu t'exprimes exclusivement en Français."},
+                    {
+                        "role": "system", 
+                        "content": (
+                            "Tu es un assistant RH professionnel expert en audit de CV. "
+                            "Ton analyse doit être critique, structurée et orientée impact (KPI). "
+                            "Tu t'exprimes exclusivement en Français."
+                        )
+                    },
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.1
@@ -76,12 +90,11 @@ class CVAnalyzer:
             if "---MARKDOWN---" in content:
                 json_part, markdown_part = content.split("---MARKDOWN---", 1)
             else:
-                # Fallback if separator is missing
                 logger.warning("Separator ---MARKDOWN--- not found in LLM response.")
                 json_part = content
                 markdown_part = "# Dossier Augmenté\n\n(Auto-generated from analysis)\n\n" + content
 
-            # Clean JSON part (sometimes LLM adds code blocks)
+            # Clean JSON part
             json_part = json_part.strip()
             if json_part.startswith("```json"):
                 json_part = json_part[7:]
@@ -89,7 +102,7 @@ class CVAnalyzer:
                 json_part = json_part[:-3]
             json_part = json_part.strip()
 
-            analysis_data = CVAnalysis.model_validate_json(json_part)
+            analysis_data = AnalyseCV.model_validate_json(json_part)
             return analysis_data, markdown_part.strip()
 
         except Exception as e:

@@ -2,23 +2,23 @@ import pytest
 from fastapi.testclient import TestClient
 from unittest.mock import patch, MagicMock
 from app.main import app
-from app.models import CVAnalysis, CareerDynamics, SoftSkills, TechStack
+from app.models import AnalyseCV, DynamiqueCarriere, CompetencesDouces, StackTechnique
 
 client = TestClient(app)
 
 @pytest.fixture
 def mock_analysis_data():
-    return CVAnalysis(
-        career_dynamics=CareerDynamics(seniority="Senior", progression="Good"),
-        culture_fit="Agile",
-        outreach="None",
-        languages=["English"],
-        soft_skills=SoftSkills(leadership=5, autonomy=5, teamwork=5, communication=5),
-        tech_stack=TechStack(main=["Python"], secondary=[], veille=[]),
-        mobility="Paris",
-        weak_signals="None",
-        location="Paris, 75000",
-        summary="A test CV"
+    return AnalyseCV(
+        dynamique_carriere=DynamiqueCarriere(seniorite="Senior", progression="Good"),
+        fit_culturel="Agile",
+        rayonnement="None",
+        langues=["English"],
+        competences_douces=CompetencesDouces(leadership=5, autonomie=5, travail_equipe=5, communication=5),
+        stack_technique=StackTechnique(principale=["Python"], secondaire=[], veille=[]),
+        mobilite="Paris",
+        signaux_faibles="None",
+        localisation="Paris, 75000",
+        resume="A test CV"
     )
 
 @patch("app.main.download_file")
@@ -36,7 +36,7 @@ def test_analyze_cv_endpoint(mock_analyzer, mock_parse, mock_download, mock_anal
     assert response.status_code == 200
     data = response.json()
     assert data["id"] == "test-uuid"
-    assert data["analysis"]["career_dynamics"]["seniority"] == "Senior"
+    assert data["analysis"]["dynamique_carriere"]["seniorite"] == "Senior"
     assert data["dossier_markdown"] == "# Augmented Dossier"
     
     mock_download.assert_called_once()
