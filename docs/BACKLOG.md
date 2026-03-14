@@ -52,15 +52,8 @@ Pour chaque ticket du Sprint Plan, le Lead-Dev ou l'UX doit valider :
 ## Epic 2 : Ingestion et Intelligence Profonde (Parsing)
 *   **[DONE]** **[PBI-001]** Endpoint d'Upload : Envoyer un PDF, le stocker dans MinIO.
 *   **[DONE]** **[PBI-002]** Pipeline de Parsing : Extraire le texte structuré via Docling.
-*   **[DONE]** **[PBI-003]** Structuration IA & Intelligence Latente (8 axes) : L'IA transforme le texte Docling en un dossier candidat "augmenté" (Markdown + Métadonnées) selon 8 axes stratégiques.
+*   **[PBI-003]** Structuration IA & Intelligence Latente (8 axes) : L'IA transforme le texte Docling en un dossier candidat "augmenté" (Markdown + Métadonnées) selon 8 axes stratégiques.
 *   **[PBI-004]** Vectorisation : Convertir le Markdown enrichi en embeddings et les insérer dans Qdrant avec leur Payload.
-
----
-
-## 💡 FEEDBACKS À AFFINER (POST-DÉMO SPRINT 3)
-*   **[LANG]** : Forcer l'IA à générer le Dossier Augmenté et le JSON en **Français** (prompt system).
-*   **[GEO]** : Ajouter un axe "Localisation Actuelle" (Ville/Code Postal) dans le modèle de données et le prompt, car c'est une information critique pour le matching.
-*   **[UI Polish]** : Prévoir une meilleure mise en forme des scores (ex: barres de progression) dans le rendu Markdown.
 
 
 ## Epic 3 : Moteur de Recherche RH et Radar Multi-critères
