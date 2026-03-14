@@ -26,7 +26,14 @@ class DynamiqueCarriere(BaseModel):
 class AuditRigueur(BaseModel):
     score_orthographe: str = Field(description="Évaluation impitoyable de la langue et de la mise en forme.")
     coherence_competences: str = Field(description="Vérifie si les technos citées correspondent aux dates/rôles. Démasque les mensonges probables.")
-    coquilles_detectees: List[str] = Field(description="Liste exhaustive des fautes d'orthographe ou incohérences de dates. Vide si parfait.")
+    coquilles_detectees: List[str] = Field(
+        description=(
+            "Liste exhaustive des fautes d'orthographe ou incohérences de dates. "
+            "RÈGLE STRICTE SUR LES DATES : Calcule mathématiquement les mois et années avant de signaler un chevauchement. "
+            "Ne signale pas de chevauchement si une expérience suit l'autre logiquement (ex: fin en Octobre, début en Octobre). "
+            "Vide si parfait."
+        )
+    )
 
 class AnalyseCV(BaseModel):
     dynamique_carriere: DynamiqueCarriere
@@ -38,5 +45,11 @@ class AnalyseCV(BaseModel):
     localisation: str = Field(description="Ville et CP. Si absent : 'Inconnu'.")
     mobilite: str = Field(description="Mentionne UNIQUEMENT si spécifié (ex: 'Déplacement 50%'). Sinon 'Non précisé'.")
     signaux_faibles: str = Field(description="ZONE CRITIQUE : Analyse les anomalies, les durées trop courtes (<1 an) et les incohérences.")
-    resume: str = Field(description="Synthèse IMPACTANTE. Utilise des verbes d'action et cite au moins 2 chiffres/KPIs du CV.")
+    resume: str = Field(
+        description=(
+            "Synthèse IMPACTANTE. Utilise des verbes d'action. "
+            "RÈGLE ABSOLUE : NE JAMAIS INVENTER DE CHIFFRES OU DE POURCENTAGES. "
+            "Si le CV ne contient pas de métriques exactes, décris les réalisations de manière purement qualitative."
+        )
+    )
     audit_rigueur: AuditRigueur
