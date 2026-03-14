@@ -1,5 +1,4 @@
 import os
-import json
 import logging
 from typing import Tuple, Optional
 from openai import OpenAI
@@ -18,56 +17,26 @@ class CVAnalyzer:
 
     def analyze_cv(self, cv_text: str) -> Tuple[AnalyseCV, str]:
         """
-        Analyse le texte du CV via LLM et retourne les données structurées et un dossier Markdown.
+        Analyse le texte du CV via LLM (Structured Outputs) et retourne les données structurées et un dossier Markdown.
         """
         prompt = f"""
-        Tu es un Auditeur RH Expert et Chasseur de Têtes Senior. Ta tâche est d'analyser le texte du CV suivant avec une profondeur analytique maximale.
+        Tu es un Expert en Audit RH, Psychologue du Travail et Chasseur de Têtes Senior. 
+        Ta mission est de déconstruire le texte brut d'un CV pour en extraire une structure logique, objective et exempte de biais.
         
-        ### TEXTE DU CV :
+        ### TEXTE DU CV À ANALYSER :
         {cv_text}
-        
-        ### MISSIONS D'AUDIT (LES 5 PILIERS) :
-        1. **Chronologie Non-Linéaire** : Analyse les dates pour repérer les chevauchements, les retours d'expérience ou les progressions atypiques.
-        2. **Impact KPI** : Identifie les résultats concrets, les chiffres et les verbes d'action. Ne te contente pas de lister les tâches.
-        3. **Hiérarchie Hard/Transverse** : Distingue clairement les expertises techniques (Hard) des compétences transversales (Méthodologies, Management).
-        4. **Détection fine de Signaux Faibles** : Repère les trous de plus de 6 mois, les changements fréquents d'entreprise ou les incohérences sémantiques.
-        5. **Expertise Sectorielle** : Évalue la pertinence du candidat par rapport à ses environnements passés (Startup vs Grand Compte).
 
-        ### FORMAT DE SORTIE :
-        Tu dois répondre EXCLUSIVEMENT en Français.
-        Tu dois retourner un objet JSON correspondant à la structure définie ci-dessous, suivi du séparateur "---MARKDOWN---", puis un "Dossier Augmenté" détaillé en Markdown.
-        
-        Structure JSON attendue :
-        {{
-            "dynamique_carriere": {{
-                "seniorite": "Junior|Intermédiaire|Sénior|Lead|Expert", 
-                "progression": "Analyse détaillée de la progression et chronologie"
-            }},
-            "fit_culturel": "Analyse de l'environnement idéal (Startup, Agile, Grand Compte)",
-            "rayonnement": "Engagement communautaire, Open Source, Side Projects, Conférences",
-            "langues": ["Langue (Niveau/Contexte)", "..."],
-            "competences_douces": {{
-                "leadership": 0-10, 
-                "autonomie": 0-10, 
-                "travail_equipe": 0-10, 
-                "communication": 0-10
-            }},
-            "stack_technique": {{
-                "principale": ["..."], 
-                "secondaire": ["..."], 
-                "veille": ["..."]
-            }},
-            "mobilite": "Zone géographique et télétravail",
-            "signaux_faibles": "Audit critique : trous, incohérences, points de vigilance",
-            "localisation": "Ville, Code Postal",
-            "resume": "Synthèse executive à fort impact"
-        }}
-        
-        Important : Si une information est manquante, n'hallucine pas. Utilise "Non déterminé" ou "Données insuffisantes".
+        ### PROTOCOLE D'AUDIT (LES 5 PILIERS) :
+        1. **Chronologie Non-Linéaire** : Calcule la durée réelle des expériences. Repère les chevauchements, les retours d'expérience ou les progressions atypiques (verticales/horizontales).
+        2. **Impact KPI (Valeur Ajoutée)** : Isole les PREUVES concrètes de succès (chiffres, verbes d'action, résultats). Ne te contente pas de lister les tâches.
+        3. **Hiérarchie Hard/Transverse** : Distingue clairement les expertises techniques (Hard) des compétences transversales (Méthodologies, Management, Transversalité).
+        4. **Détection fine de Signaux Faibles** : Traque les trous de plus de 6 mois, les changements fréquents d'entreprise ou les incohérences sémantiques entre le titre et le contenu.
+        5. **Expertise & Rigueur** : Évalue la qualité rédactionnelle et la cohérence globale du parcours.
         """
 
         try:
-            response = self.client.chat.completions.create(
+            # Utilisation de la méthode 'parse' (OpenAI >= 1.40.0) pour garantir la structure Pydantic
+            response = self.client.chat.completions.parse(
                 model=self.model,
                 messages=[
                     {
@@ -80,31 +49,67 @@ class CVAnalyzer:
                     },
                     {"role": "user", "content": prompt}
                 ],
+                response_format=AnalyseCV,
                 temperature=0.1
             )
             
-            content = response.choices[0].message.content
-            if content is None:
-                raise RuntimeError("LLM returned an empty response.")
+            analysis_data = response.choices[0].message.parsed
             
-            if "---MARKDOWN---" in content:
-                json_part, markdown_part = content.split("---MARKDOWN---", 1)
-            else:
-                logger.warning("Separator ---MARKDOWN--- not found in LLM response.")
-                json_part = content
-                markdown_part = "# Dossier Augmenté\n\n(Auto-generated from analysis)\n\n" + content
+            if not analysis_data:
+                # Gestion du cas où le modèle refuse de répondre (refusal)
+                refusal = response.choices[0].message.refusal
+                logger.error(f"LLM refusal: {refusal}")
+                raise RuntimeError(f"L'IA a refusé d'analyser ce CV : {refusal}")
 
-            # Clean JSON part
-            json_part = json_part.strip()
-            if json_part.startswith("```json"):
-                json_part = json_part[7:]
-            if json_part.endswith("```"):
-                json_part = json_part[:-3]
-            json_part = json_part.strip()
+            # Génération du Markdown côté serveur
+            markdown_part = self._generate_markdown(analysis_data)
 
-            analysis_data = AnalyseCV.model_validate_json(json_part)
-            return analysis_data, markdown_part.strip()
+            return analysis_data, markdown_part
 
         except Exception as e:
             logger.error(f"Error during CV analysis: {str(e)}")
             raise RuntimeError(f"CV analysis failed: {str(e)}")
+
+    def _generate_markdown(self, data: AnalyseCV) -> str:
+        """Génère un rapport Markdown structuré à partir des données validées."""
+        md = f"""# 📑 Dossier Augmenté - Audit RH Expert
+
+## 🎯 Synthèse Executive
+{data.resume}
+
+## 📈 Dynamique de Carrière
+- **Séniorité** : {data.dynamique_carriere.seniorite}
+- **Progression** : {data.dynamique_carriere.progression}
+- **Exposition Stratégique** : {data.dynamique_carriere.exposition_strategique}
+
+## 🛠️ Expertise & Stack Métier
+- **Cœur de métier (Hard Skills)** : {', '.join(data.stack_metier.principale) if data.stack_metier.principale else 'Non spécifié'}
+- **Compétences Transverses** : {', '.join(data.stack_metier.secondaire) if data.stack_metier.secondaire else 'Non spécifié'}
+- **Veille & Normes** : {', '.join(data.stack_metier.veille_et_normes) if data.stack_metier.veille_et_normes else 'Non spécifié'}
+
+## 🧠 Compétences Douces (Scores /10)
+- 🗣️ **Communication** : {data.competences_douces.communication}/10
+- 🤝 **Travail d'équipe** : {data.competences_douces.travail_equipe}/10
+- 🚀 **Autonomie** : {data.competences_douces.autonomie}/10
+- 👑 **Leadership** : {data.competences_douces.leadership}/10
+
+## 🌍 Fit Culturel & Rayonnement
+- **Environnement idéal** : {data.fit_culturel}
+- **Rayonnement / Engagement** : {data.rayonnement}
+
+## 📍 Informations Pratiques
+- **Localisation** : {data.localisation}
+- **Mobilité & Télétravail** : {data.mobilite}
+- **Langues** : {', '.join(data.langues) if data.langues else 'Non déterminé'}
+
+## 🔍 Audit de Rigueur & Signaux Faibles
+- **Audit de cohérence** : {data.signaux_faibles}
+- **Qualité rédactionnelle** : {data.audit_rigueur.score_orthographe}
+- **Cohérence Rôles/Compétences** : {data.audit_rigueur.coherence_competences}
+"""
+        if data.audit_rigueur.coquilles_detectees:
+            md += "\n**Points de vigilance :**\n"
+            for coquille in data.audit_rigueur.coquilles_detectees:
+                md += f"- {coquille}\n"
+        
+        return md.strip()

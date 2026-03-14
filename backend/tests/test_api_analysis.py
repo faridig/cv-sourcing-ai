@@ -2,23 +2,32 @@ import pytest
 from fastapi.testclient import TestClient
 from unittest.mock import patch, MagicMock
 from app.main import app
-from app.models import AnalyseCV, DynamiqueCarriere, CompetencesDouces, StackTechnique
+from app.models import AnalyseCV, DynamiqueCarriere, CompetencesDouces, StackMetier, AuditRigueur
 
 client = TestClient(app)
 
 @pytest.fixture
 def mock_analysis_data():
     return AnalyseCV(
-        dynamique_carriere=DynamiqueCarriere(seniorite="Senior", progression="Good"),
+        dynamique_carriere=DynamiqueCarriere(
+            seniorite="Senior", 
+            progression="Good",
+            exposition_strategique="High"
+        ),
         fit_culturel="Agile",
         rayonnement="None",
         langues=["English"],
         competences_douces=CompetencesDouces(leadership=5, autonomie=5, travail_equipe=5, communication=5),
-        stack_technique=StackTechnique(principale=["Python"], secondaire=[], veille=[]),
+        stack_metier=StackMetier(principale=["Python"], secondaire=[], veille_et_normes=[]),
         mobilite="Paris",
         signaux_faibles="None",
         localisation="Paris, 75000",
-        resume="A test CV"
+        resume="A test CV",
+        audit_rigueur=AuditRigueur(
+            score_orthographe="Good",
+            coherence_competences="High",
+            coquilles_detectees=[]
+        )
     )
 
 @patch("app.main.download_file")
