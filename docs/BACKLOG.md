@@ -28,6 +28,8 @@ Un outil 100% local, souverain et sécurisé, destiné aux professionnels des Re
 *   **Décision 6 (Méthodologie)** : Adoption du modèle "Single-Piece Flow" : **1 seul ticket (PBI) par Sprint**. Cela garantit une maîtrise parfaite, une livraison continue et minimise les risques de régression technique.
 *   **Décision 7 (Technique)** : Remplacement de `PyMuPDF` par **Docling (IBM)** pour l'extraction de texte. Ce choix garantit que les CV multi-colonnes sont lus dans le bon ordre sémantique avant l'analyse par l'IA.
 
+*   **[Décision 8]** : Le système n'extrait pas seulement le texte, il "augmente" le profil via 8 axes d'analyse (Dynamique de carrière, Culture Fit, Rayonnement, Langues, Soft Skills, Stack Hiérarchisée, Mobilité, Signaux Faibles) pour garantir un RAG ultra-performant.
+
 ---
 
 # ✅ DEFINITION OF DONE (DoD)
@@ -49,9 +51,10 @@ Pour chaque ticket du Sprint Plan, le Lead-Dev ou l'UX doit valider :
 
 ## Epic 2 : Ingestion et Intelligence Profonde (Parsing)
 *   **[DONE]** **[PBI-001]** Endpoint d'Upload : Envoyer un PDF, le stocker dans MinIO.
-*   **[PBI-002]** Pipeline de Parsing (Sprint 2 - En Cours) : Extraire le texte structuré via Docling.
-*   **[PBI-003]** Structuration IA & Extraction des "Soft Skills Latentes" : L'IA lit les données issues de Docling, déduit les compétences non écrites, et génère le Markdown final enrichi.
-*   **[PBI-004]** Vectorisation : Convertir le Markdown enrichi en embeddings et les insérer dans Qdrant.
+*   **[DONE]** **[PBI-002]** Pipeline de Parsing : Extraire le texte structuré via Docling.
+*   **[PBI-003]** Structuration IA & Intelligence Latente (8 axes) : L'IA transforme le texte Docling en un dossier candidat "augmenté" (Markdown + Métadonnées) selon 8 axes stratégiques.
+*   **[PBI-004]** Vectorisation : Convertir le Markdown enrichi en embeddings et les insérer dans Qdrant avec leur Payload.
+
 
 ## Epic 3 : Moteur de Recherche RH et Radar Multi-critères
 *   **[PBI-005]** Endpoint Sourcing : Prendre une annonce en input, chercher les Top 20 vecteurs les plus proches dans Qdrant.
