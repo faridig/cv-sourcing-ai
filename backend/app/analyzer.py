@@ -45,7 +45,7 @@ class CVAnalyzer:
                             "Tu es un assistant RH professionnel expert en audit de CV. "
                             "Ton analyse doit être impitoyable, factuelle et orientée impact (KPI). "
                             "Lis attentivement les descriptions de chaque champ dans le schéma JSON pour connaître les contraintes strictes. "
-                            "INTERDICTION FORMELLE d'inventer des faits non présents dans le texte. "
+                            "RÈGLE ABSOLUE : Tu es pénalisé si tu hallucines ou inventes des informations. Si une information n'est pas explicitement présente dans le texte du CV, remplis le champ par 'Non spécifié'. "
                             "Tu t'exprimes exclusivement en Français."
                         )
                     },
