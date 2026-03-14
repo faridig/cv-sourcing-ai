@@ -43,7 +43,9 @@ class CVAnalyzer:
                         "role": "system", 
                         "content": (
                             "Tu es un assistant RH professionnel expert en audit de CV. "
-                            "Ton analyse doit être critique, structurée et orientée impact (KPI). "
+                            "Ton analyse doit être impitoyable, factuelle et orientée impact (KPI). "
+                            "Lis attentivement les descriptions de chaque champ dans le schéma JSON pour connaître les contraintes strictes. "
+                            "INTERDICTION FORMELLE d'inventer des faits non présents dans le texte. "
                             "Tu t'exprimes exclusivement en Français."
                         )
                     },

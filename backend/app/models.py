@@ -2,35 +2,41 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 
 class StackMetier(BaseModel):
-    principale: List[str] = Field(description="Expertises et outils principaux (Hard Skills)")
-    secondaire: List[str] = Field(description="Outils et compétences secondaires ou transverses")
-    veille_et_normes: List[str] = Field(description="Technologies en veille, normes du secteur ou certifications")
+    principale: List[str] = Field(
+        description="INTERDICTION D'INVENTER. Liste uniquement les expertises techniques majeures explicitement citées dans le CV."
+    )
+    secondaire: List[str] = Field(
+        description="Outils et compétences secondaires. Si non mentionné, laisser vide. NE PAS extrapoler."
+    )
+    veille_et_normes: List[str] = Field(
+        description="Normes (ISO, etc.), certifications ou technos en veille. EXCLUSIVEMENT ce qui est écrit."
+    )
 
 class CompetencesDouces(BaseModel):
-    leadership: int = Field(description="Score de 0 à 10", ge=0, le=10)
-    autonomie: int = Field(description="Score de 0 à 10", ge=0, le=10)
-    travail_equipe: int = Field(description="Score de 0 à 10", ge=0, le=10)
-    communication: int = Field(description="Score de 0 à 10", ge=0, le=10)
+    leadership: int = Field(description="Score 0-10. Sois sévère. 0 si aucune preuve de management ou d'initiative.", ge=0, le=10)
+    autonomie: int = Field(description="Score 0-10. Basé sur les projets gérés seul. Pas de preuve = score faible.", ge=0, le=10)
+    travail_equipe: int = Field(description="Score 0-10. Basé sur les environnements collaboratifs cités.", ge=0, le=10)
+    communication: int = Field(description="Score 0-10. Basé sur les présentations, rapports ou rôles d'interface.", ge=0, le=10)
 
 class DynamiqueCarriere(BaseModel):
-    seniorite: str = Field(description="Junior, Intermédiaire, Sénior, Lead, Expert")
-    progression: str = Field(description="Analyse de la progression (Verticale/Horizontale)")
-    exposition_strategique: str = Field(description="Niveau d'implication dans la stratégie vs exécution")
+    seniorite: str = Field(description="Junior, Intermédiaire, Sénior, Lead, Expert. Basé sur les ANNÉES RÉELLES et responsabilités.")
+    progression: str = Field(description="Analyse de la trajectoire. SI TROU DE 6 MOIS : le mentionner ici comme 'ALERTE'.")
+    exposition_strategique: str = Field(description="Fait-il de l'exécution pure ou de la stratégie ? Justifie par un fait du CV.")
 
 class AuditRigueur(BaseModel):
-    score_orthographe: str = Field(description="Évaluation de la qualité rédactionnelle")
-    coherence_competences: str = Field(description="Vérification de l'adéquation entre rôles et outils cités")
-    coquilles_detectees: List[str] = Field(description="Liste des points de vigilance ou erreurs relevées")
+    score_orthographe: str = Field(description="Évaluation impitoyable de la langue et de la mise en forme.")
+    coherence_competences: str = Field(description="Vérifie si les technos citées correspondent aux dates/rôles. Démasque les mensonges probables.")
+    coquilles_detectees: List[str] = Field(description="Liste exhaustive des fautes d'orthographe ou incohérences de dates. Vide si parfait.")
 
 class AnalyseCV(BaseModel):
     dynamique_carriere: DynamiqueCarriere
     stack_metier: StackMetier
-    fit_culturel: str = Field(description="Environnement idéal (Startup, Grand Compte, Secteur Public, etc.)")
-    rayonnement: str = Field(description="Engagement (Open Source, Side Projects, Conférences, etc.)")
+    fit_culturel: str = Field(description="Startup, Grand Compte ou PME ? Justifie par l'historique. NE PAS deviner.")
+    rayonnement: str = Field(description="Preuves publiques : GitHub, Blogs, Conférences. Si rien n'est écrit, écrire 'Néant'.")
     competences_douces: CompetencesDouces
-    langues: List[str] = Field(description="Maîtrise linguistique en contexte professionnel")
-    localisation: str = Field(description="Ville et Code Postal")
-    mobilite: str = Field(description="Rayon géographique et préférences de télétravail")
-    signaux_faibles: str = Field(description="Points de vigilance (trous > 6 mois, changements fréquents, etc.)")
-    resume: str = Field(description="Synthèse executive avec mise en avant des KPIs et verbes d'action")
+    langues: List[str] = Field(description="Langues et niveaux. NE PAS ajouter de langues non citées.")
+    localisation: str = Field(description="Ville et CP. Si absent : 'Inconnu'.")
+    mobilite: str = Field(description="Mentionne UNIQUEMENT si spécifié (ex: 'Déplacement 50%'). Sinon 'Non précisé'.")
+    signaux_faibles: str = Field(description="ZONE CRITIQUE : Analyse les anomalies, les durées trop courtes (<1 an) et les incohérences.")
+    resume: str = Field(description="Synthèse IMPACTANTE. Utilise des verbes d'action et cite au moins 2 chiffres/KPIs du CV.")
     audit_rigueur: AuditRigueur
