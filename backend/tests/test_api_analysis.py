@@ -47,6 +47,8 @@ def test_analyze_cv_endpoint(mock_analyzer, mock_parse, mock_download, mock_anal
     assert data["id"] == "test-uuid"
     assert data["analysis"]["dynamique_carriere"]["seniorite"] == "Senior"
     assert data["dossier_markdown"] == "# Augmented Dossier"
+    assert "dossier_path" in data
+    assert data["dossier_path"].endswith("test-uuid.md")
     
     mock_download.assert_called_once()
     mock_parse.assert_called_once()

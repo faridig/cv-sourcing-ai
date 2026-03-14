@@ -66,10 +66,23 @@ async def analyze_cv_endpoint(file_id: str):
         
         analysis_data, augmented_markdown = analyzer.analyze_cv(markdown_text)
         
+        # Sauvegarde locale du dossier augmenté (PBI-003)
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        output_dir = os.path.join(base_dir, "data", "analyses")
+        os.makedirs(output_dir, exist_ok=True)
+        md_filename = f"{file_id}.md"
+        md_path = os.path.join(output_dir, md_filename)
+        
+        with open(md_path, "w", encoding="utf-8") as f:
+            f.write(augmented_markdown)
+            
+        logger.info(f"Dossier augmenté sauvegardé : {md_path}")
+        
         return {
             "id": file_id,
             "analysis": analysis_data,
-            "dossier_markdown": augmented_markdown
+            "dossier_markdown": augmented_markdown,
+            "dossier_path": md_path
         }
     except Exception as e:
         logger.exception(f"Erreur lors de l'analyse du CV {file_id}")
