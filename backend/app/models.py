@@ -12,11 +12,15 @@ class StackMetier(BaseModel):
         description="Normes (ISO, etc.), certifications ou technos en veille. EXCLUSIVEMENT ce qui est écrit."
     )
 
+class CompetenceScore(BaseModel):
+    score: int = Field(ge=0, le=10, description="Score de 0 à 10 basé uniquement sur les preuves du CV.")
+    preuve: str = Field(description="Preuve concrète extraite du texte. Si aucune, 'Aucune preuve explicite'.")
+
 class CompetencesDouces(BaseModel):
-    leadership: str = Field(description="Preuve concrète de leadership (ex: management, initiative). Si aucune preuve, écrire 'Aucune preuve explicite'.")
-    autonomie: str = Field(description="Preuve concrète d'autonomie (ex: gestion de projet en solo). Si aucune preuve, écrire 'Aucune preuve explicite'.")
-    travail_equipe: str = Field(description="Preuve concrète de travail d'équipe (ex: environnement collaboratif, agile). Si aucune preuve, écrire 'Aucune preuve explicite'.")
-    communication: str = Field(description="Preuve concrète de communication (ex: présentations, rapports). Si aucune preuve, écrire 'Aucune preuve explicite'.")
+    leadership: CompetenceScore
+    autonomie: CompetenceScore
+    travail_equipe: CompetenceScore
+    communication: CompetenceScore
 
 class DynamiqueCarriere(BaseModel):
     seniorite: str = Field(description="Junior, Intermédiaire, Sénior, Lead, Expert. Basé sur les ANNÉES RÉELLES et responsabilités.")

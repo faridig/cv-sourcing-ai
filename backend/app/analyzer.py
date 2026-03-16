@@ -26,12 +26,15 @@ class CVAnalyzer:
         ### TEXTE DU CV À ANALYSER :
         {cv_text}
 
-        ### PROTOCOLE D'AUDIT (LES 5 PILIERS) :
-        1. **Chronologie & Dates (Chain of Thought)** : Pour chaque expérience, liste le mois de début et de fin. Compare la date de fin de l'expérience N avec la date de début de l'expérience N+1. S'il y a un écart négatif, ALORS signale un chevauchement dans l'Audit de Rigueur.
-        2. **Dynamique de Progression** : Analyse l'évolution des titres de postes pour déterminer la progression (ex: Analyste -> Data Scientist = Progression verticale ascendante).
-        3. **Impact KPI (Valeur Ajoutée)** : Isole les PREUVES concrètes de succès (chiffres, verbes d'action, résultats).
-        4. **Hiérarchie Hard/Soft** : Distingue les expertises techniques des Soft Skills. Pour les Soft Skills, extrais des PREUVES précises du texte (ex: "A animé des sessions de formation" pour le Leadership).
-        5. **Détection fine de Signaux Faibles** : Traque les trous de plus de 6 mois, les changements fréquents ou les incohérences.
+        ### PROTOCOLE D'AUDIT (LES 8 AXES) :
+        1. **Dynamique de Carrière** : Analyse de la séniorité et de la progression (verticale/horizontale).
+        2. **Culture Fit** : Identification de l'environnement idéal (Startup, Grand Groupe, Agile, R&D).
+        3. **Rayonnement** : Engagement (Open Source, Conférences, Blogs).
+        4. **Langues** : Usage contextuel et niveau déduit.
+        5. **Soft Skills (Scores 0-10)** : Évaluation du Leadership, Autonomie, Travail d'équipe et Communication avec scores et preuves.
+        6. **Stack Technologique Hiérarchisée** : Distingue Main (cœur), Secondary (outils) et Veille/Normes.
+        7. **Mobilité & Télétravail** : Analyse des préférences ou contraintes géographiques citées.
+        8. **Signaux Faibles & Audit** : Audit de cohérence, détection de trous, chevauchements ou incohérences.
         """
 
         try:
@@ -78,7 +81,7 @@ class CVAnalyzer:
     def _generate_markdown(self, data: AnalyseCV) -> str:
         """Génère un rapport Markdown structuré à partir des données validées."""
         md = f"""# 📑 Dossier Augmenté - Audit RH Expert
-
+        
 ## 🎯 Synthèse Executive
 {data.resume}
 
@@ -92,11 +95,11 @@ class CVAnalyzer:
 - **Compétences Transverses** : {', '.join(data.stack_metier.secondaire) if data.stack_metier.secondaire else 'Non spécifié'}
 - **Veille & Normes** : {', '.join(data.stack_metier.veille_et_normes) if data.stack_metier.veille_et_normes else 'Non spécifié'}
 
-## 🧠 Compétences Douces (Preuves)
-- 🗣️ **Communication** : {data.competences_douces.communication}
-- 🤝 **Travail d'équipe** : {data.competences_douces.travail_equipe}
-- 🚀 **Autonomie** : {data.competences_douces.autonomie}
-- 👑 **Leadership** : {data.competences_douces.leadership}
+## 🧠 Compétences Douces (Scores & Preuves)
+- 👑 **Leadership** : {data.competences_douces.leadership.score}/10 - {data.competences_douces.leadership.preuve}
+- 🚀 **Autonomie** : {data.competences_douces.autonomie.score}/10 - {data.competences_douces.autonomie.preuve}
+- 🤝 **Travail d'équipe** : {data.competences_douces.travail_equipe.score}/10 - {data.competences_douces.travail_equipe.preuve}
+- 🗣️ **Communication** : {data.competences_douces.communication.score}/10 - {data.competences_douces.communication.preuve}
 
 ## 🌍 Fit Culturel & Rayonnement
 - **Environnement idéal** : {data.fit_culturel}

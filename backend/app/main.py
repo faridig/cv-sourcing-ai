@@ -84,9 +84,18 @@ async def analyze_cv_endpoint(file_id: str):
             "dossier_markdown": augmented_markdown,
             "dossier_path": md_path
         }
+    except ClientError as e:
+        # Gestion robuste des erreurs MinIO/S3 (PBI-003 Harmonisation)
+        error_code = e.response.get('Error', {}).get('Code', 'Unknown')
+        if error_code in ['404', 'NoSuchKey']:
+            logger.warning(f"Fichier non trouvé pour l'analyse : {file_id}")
+            raise HTTPException(status_code=404, detail=f"Fichier {file_id} non trouvé dans le stockage.")
+        
+        logger.error(f"Erreur stockage lors de l'analyse du CV {file_id} : {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur de communication avec le stockage.")
     except Exception as e:
-        logger.exception(f"Erreur lors de l'analyse du CV {file_id}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.exception(f"Erreur interne lors de l'analyse du CV {file_id}")
+        raise HTTPException(status_code=500, detail="Une erreur interne est survenue lors de l'analyse.")
     finally:
         if os.path.exists(tmp_path):
             os.remove(tmp_path)

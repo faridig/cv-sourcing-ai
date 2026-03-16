@@ -20,10 +20,10 @@ def mock_openai_response():
         "fit_culturel": "Agile, Startup",
         "rayonnement": "Actif sur GitHub",
         "competences_douces": {
-            "leadership": "A dirigé une équipe de 5 personnes", 
-            "autonomie": "Gestion complète du projet X", 
-            "travail_equipe": "Évolue en environnement Scrum", 
-            "communication": "Rédaction de rapports techniques"
+            "leadership": {"score": 8, "preuve": "A dirigé une équipe de 5 personnes"}, 
+            "autonomie": {"score": 9, "preuve": "Gestion complète du projet X"}, 
+            "travail_equipe": {"score": 7, "preuve": "Évolue en environnement Scrum"}, 
+            "communication": {"score": 8, "preuve": "Rédaction de rapports techniques"}
         },
         "langues": ["Français", "Anglais"],
         "localisation": "Paris, 75001",
@@ -60,9 +60,11 @@ def test_analyze_cv_success(mock_openai_class, mock_openai_response):
     # Assert
     assert isinstance(analysis, AnalyseCV)
     assert analysis.dynamique_carriere.seniorite == "Sénior"
-    assert "équipe de 5 personnes" in analysis.competences_douces.leadership
+    assert analysis.competences_douces.leadership.score == 8
+    assert "équipe de 5 personnes" in analysis.competences_douces.leadership.preuve
     assert analysis.localisation == "Paris, 75001"
     assert "Dossier Augmenté" in markdown
+    assert "8/10" in markdown
     assert "Python" in analysis.stack_metier.principale
 
 @patch("app.analyzer.OpenAI")
