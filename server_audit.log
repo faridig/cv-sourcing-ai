@@ -1,0 +1,80 @@
+INFO:backend.app.parser:Docling est correctement importé.
+INFO:     Started server process [548510]
+INFO:     Waiting for application startup.
+INFO:backend.app.main:Démarrage du serveur Sourcing RH...
+INFO:backend.app.main:Diagnostic : Docling est disponible.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+ERROR:backend.app.main:Erreur de stockage pour 44c956d9-9bf8-4f65-8628-e54737f28f5e: An error occurred (404) when calling the HeadObject operation: Not Found
+INFO:     127.0.0.1:34864 - "POST /api/cv/parse/44c956d9-9bf8-4f65-8628-e54737f28f5e HTTP/1.1" 404 Not Found
+ERROR:backend.app.main:Erreur de stockage pour 44c956d9-9bf8-4f65-8628-e54737f28f5e: An error occurred (404) when calling the HeadObject operation: Not Found
+INFO:     127.0.0.1:34872 - "POST /api/cv/parse/44c956d9-9bf8-4f65-8628-e54737f28f5e HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:34884 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34890 - "GET /api/health HTTP/1.1" 200 OK
+ERROR:backend.app.main:Erreur de stockage pour 44c956d9-9bf8-4f65-8628-e54737f28f5e: An error occurred (404) when calling the HeadObject operation: Not Found
+INFO:     127.0.0.1:34892 - "POST /api/cv/parse/44c956d9-9bf8-4f65-8628-e54737f28f5e HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51352 - "GET /api/health HTTP/1.1" 200 OK
+ERROR:backend.app.main:Erreur de stockage pour 44c956d9-9bf8-4f65-8628-e54737f28f5e: An error occurred (404) when calling the HeadObject operation: Not Found
+INFO:     127.0.0.1:57916 - "POST /api/cv/parse/44c956d9-9bf8-4f65-8628-e54737f28f5e HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:38802 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:backend.app.parser:Début de la conversion pour : /tmp/tmp9ngzb4mr.pdf
+INFO:docling.datamodel.document:detected formats: [<InputFormat.PDF: 'pdf'>]
+INFO:docling.document_converter:Going to convert document batch...
+INFO:docling.document_converter:Initializing pipeline for StandardPdfPipeline with options hash da8ee54367e24a411bb95591847bb457
+INFO:docling.models.factories.base_factory:Loading plugin 'docling_defaults'
+INFO:docling.models.factories:Registered picture descriptions: ['picture_description_vlm_engine', 'vlm', 'api']
+INFO:docling.models.factories.base_factory:Loading plugin 'docling_defaults'
+INFO:docling.models.factories:Registered ocr engines: ['auto', 'easyocr', 'ocrmac', 'rapidocr', 'tesserocr', 'tesseract']
+INFO:docling.models.stages.ocr.auto_ocr_model:rapidocr cannot be used because onnxruntime is not installed.
+INFO:docling.models.stages.ocr.auto_ocr_model:easyocr cannot be used because it is not installed.
+INFO:docling.utils.accelerator_utils:Accelerator device: 'cuda:0'
+[32m[INFO] 2026-03-13 11:14:01,679 [RapidOCR] base.py:22: Using engine_name: torch[0m
+[32m[INFO] 2026-03-13 11:14:01,682 [RapidOCR] device_config.py:64: Using GPU device with ID: 0[0m
+[32m[INFO] 2026-03-13 11:14:01,699 [RapidOCR] download_file.py:60: File exists and is valid: /home/farid/Projets/cv_opti/venv/lib/python3.12/site-packages/rapidocr/models/ch_PP-OCRv4_det_infer.pth[0m
+[32m[INFO] 2026-03-13 11:14:01,700 [RapidOCR] main.py:50: Using /home/farid/Projets/cv_opti/venv/lib/python3.12/site-packages/rapidocr/models/ch_PP-OCRv4_det_infer.pth[0m
+[32m[INFO] 2026-03-13 11:14:02,039 [RapidOCR] base.py:22: Using engine_name: torch[0m
+[32m[INFO] 2026-03-13 11:14:02,039 [RapidOCR] device_config.py:64: Using GPU device with ID: 0[0m
+[32m[INFO] 2026-03-13 11:14:02,041 [RapidOCR] download_file.py:60: File exists and is valid: /home/farid/Projets/cv_opti/venv/lib/python3.12/site-packages/rapidocr/models/ch_ptocr_mobile_v2.0_cls_infer.pth[0m
+[32m[INFO] 2026-03-13 11:14:02,041 [RapidOCR] main.py:50: Using /home/farid/Projets/cv_opti/venv/lib/python3.12/site-packages/rapidocr/models/ch_ptocr_mobile_v2.0_cls_infer.pth[0m
+[32m[INFO] 2026-03-13 11:14:02,117 [RapidOCR] base.py:22: Using engine_name: torch[0m
+[32m[INFO] 2026-03-13 11:14:02,117 [RapidOCR] device_config.py:64: Using GPU device with ID: 0[0m
+[32m[INFO] 2026-03-13 11:14:02,148 [RapidOCR] download_file.py:60: File exists and is valid: /home/farid/Projets/cv_opti/venv/lib/python3.12/site-packages/rapidocr/models/ch_PP-OCRv4_rec_infer.pth[0m
+[32m[INFO] 2026-03-13 11:14:02,149 [RapidOCR] main.py:50: Using /home/farid/Projets/cv_opti/venv/lib/python3.12/site-packages/rapidocr/models/ch_PP-OCRv4_rec_infer.pth[0m
+INFO:docling.models.stages.ocr.auto_ocr_model:Auto OCR model selected rapidocr with torch.
+INFO:docling.models.factories.base_factory:Loading plugin 'docling_defaults'
+INFO:docling.models.factories:Registered layout engines: ['layout_object_detection', 'docling_layout_default', 'docling_experimental_table_crops_layout']
+INFO:docling.utils.accelerator_utils:Accelerator device: 'cuda:0'
+INFO:docling.models.factories.base_factory:Loading plugin 'docling_defaults'
+INFO:docling.models.factories:Registered table structure engines: ['docling_tableformer', 'docling_tableformer_v2']
+INFO:docling.utils.accelerator_utils:Accelerator device: 'cuda:0'
+INFO:docling.pipeline.base_pipeline:Processing document tmp9ngzb4mr.pdf
+INFO:docling.document_converter:Finished converting document tmp9ngzb4mr.pdf in 4.28 sec.
+INFO:backend.app.parser:Conversion réussie pour : /tmp/tmp9ngzb4mr.pdf
+INFO:     127.0.0.1:44520 - "POST /api/cv/parse/57dd8bb4-b531-44b3-a1b5-09a0eb71d764 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33376 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45266 - "POST /api/cv/analyze/57dd8bb4-b531-44b3-a1b5-09a0eb71d764 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:35144 - "POST /api/cv/analyze/57dd8bb4-b531-44b3-a1b5-09a0eb71d764 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:35156 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52584 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42934 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42936 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55682 - "GET /api/health HTTP/1.1" 200 OK

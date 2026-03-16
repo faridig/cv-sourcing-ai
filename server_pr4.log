@@ -1,0 +1,46 @@
+INFO:     Started server process [448606]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:33266 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33276 - "POST /api/cv/parse/non-existent-id HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:33282 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33286 - "POST /api/cv/upload HTTP/1.1" 200 OK
+ERROR:backend.app.parser:Docling n'est pas installé.
+INFO:     127.0.0.1:33288 - "POST /api/cv/parse/c4848d84-3ca1-4351-ad11-307b2bcfc3de HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36310 - "POST /api/cv/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48478 - "POST /api/cv/parse/06f12df20c0ed54e HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:47288 - "POST /api/cv/upload HTTP/1.1" 200 OK
+ERROR:backend.app.parser:Docling n'est pas installé.
+INFO:     127.0.0.1:33704 - "POST /api/cv/parse/44c956d9-9bf8-4f65-8628-e54737f28f5e HTTP/1.1" 500 Internal Server Error
+ERROR:backend.app.parser:Docling n'est pas installé.
+INFO:     127.0.0.1:33116 - "POST /api/cv/parse/44c956d9-9bf8-4f65-8628-e54737f28f5e HTTP/1.1" 500 Internal Server Error
+ERROR:backend.app.parser:Docling n'est pas installé.
+INFO:     127.0.0.1:36482 - "POST /api/cv/parse/44c956d9-9bf8-4f65-8628-e54737f28f5e HTTP/1.1" 500 Internal Server Error
+ERROR:backend.app.parser:Docling n'est pas installé.
+INFO:     127.0.0.1:50878 - "POST /api/cv/parse/44c956d9-9bf8-4f65-8628-e54737f28f5e HTTP/1.1" 500 Internal Server Error
+ERROR:backend.app.parser:Docling n'est pas installé.
+INFO:     127.0.0.1:40498 - "POST /api/cv/parse/44c956d9-9bf8-4f65-8628-e54737f28f5e HTTP/1.1" 500 Internal Server Error
+ERROR:backend.app.parser:Docling n'est pas installé.
+INFO:     127.0.0.1:40502 - "POST /api/cv/parse/44c956d9-9bf8-4f65-8628-e54737f28f5e HTTP/1.1" 500 Internal Server Error
+ERROR:backend.app.parser:Docling n'est pas installé.
+INFO:     127.0.0.1:40516 - "POST /api/cv/parse/44c956d9-9bf8-4f65-8628-e54737f28f5e HTTP/1.1" 500 Internal Server Error
