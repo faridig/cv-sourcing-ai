@@ -27,11 +27,11 @@ class CVAnalyzer:
         {cv_text}
 
         ### PROTOCOLE D'AUDIT (LES 5 PILIERS) :
-        1. **Chronologie Non-Linéaire** : Calcule la durée réelle des expériences. Repère les chevauchements, les retours d'expérience ou les progressions atypiques (verticales/horizontales).
-        2. **Impact KPI (Valeur Ajoutée)** : Isole les PREUVES concrètes de succès (chiffres, verbes d'action, résultats). Ne te contente pas de lister les tâches.
-        3. **Hiérarchie Hard/Transverse** : Distingue clairement les expertises techniques (Hard) des compétences transversales (Méthodologies, Management, Transversalité).
-        4. **Détection fine de Signaux Faibles** : Traque les trous de plus de 6 mois, les changements fréquents d'entreprise ou les incohérences sémantiques entre le titre et le contenu.
-        5. **Expertise & Rigueur** : Évalue la qualité rédactionnelle et la cohérence globale du parcours.
+        1. **Chronologie & Dates (Chain of Thought)** : Pour chaque expérience, liste le mois de début et de fin. Compare la date de fin de l'expérience N avec la date de début de l'expérience N+1. S'il y a un écart négatif, ALORS signale un chevauchement dans l'Audit de Rigueur.
+        2. **Dynamique de Progression** : Analyse l'évolution des titres de postes pour déterminer la progression (ex: Analyste -> Data Scientist = Progression verticale ascendante).
+        3. **Impact KPI (Valeur Ajoutée)** : Isole les PREUVES concrètes de succès (chiffres, verbes d'action, résultats).
+        4. **Hiérarchie Hard/Soft** : Distingue les expertises techniques des Soft Skills. Pour les Soft Skills, extrais des PREUVES précises du texte (ex: "A animé des sessions de formation" pour le Leadership).
+        5. **Détection fine de Signaux Faibles** : Traque les trous de plus de 6 mois, les changements fréquents ou les incohérences.
         """
 
         try:
@@ -46,10 +46,9 @@ class CVAnalyzer:
                             "Ton analyse doit être impitoyable, factuelle et orientée impact (KPI). "
                             "Lis attentivement les descriptions de chaque champ dans le schéma JSON pour connaître les contraintes strictes. "
                             "RÈGLE ABSOLUE : NE JAMAIS INVENTER DE CHIFFRES OU DE POURCENTAGES. "
-                            "Si le CV ne contient pas de métriques exactes, décris les réalisations de manière purement qualitative. "
-                            "RÈGLE STRICTE SUR LES DATES : Calcule mathématiquement les mois et années avant de signaler un chevauchement. "
-                            "Ne signale pas de chevauchement si une expérience suit l'autre logiquement. "
-                            "Si une information n'est pas explicitement présente dans le texte du CV, remplis le champ par 'Non spécifié'. "
+                            "RÈGLE SUR L'ORTHOGRAPHE : IGNORE les noms propres, les technologies, les langages informatiques (ex: Django, PHP, Angular) et pardonne les erreurs de fusion de mots dues à l'extraction PDF (ex: 'Deearning' pour Deep Learning). Ne signale que les vraies fautes de grammaire ou de frappe humaines. "
+                            "RÈGLE STRICTE SUR LES DATES (ATTENTION AU PIÈGE CHRONOLOGIQUE) : Les CV sont listés du plus récent au plus ancien. Une expérience qui se termine en '12/2015' et la suivante (plus bas) qui commence en '01/2016' est une suite logique parfaite, il n'y a AUCUN chevauchement. Ne signale une erreur QUE si deux périodes se superposent réellement sur plusieurs mois (ex: un poste de 2016 à 2018 en même temps qu'un autre de 2017 à 2019). "
+                            "Si une information n'est pas explicitement présente dans le texte du CV, remplis le champ par 'Non spécifié' ou 'Aucune preuve explicite' selon le contexte. "
                             "Tu t'exprimes exclusivement en Français."
                         )
                     },
@@ -93,11 +92,11 @@ class CVAnalyzer:
 - **Compétences Transverses** : {', '.join(data.stack_metier.secondaire) if data.stack_metier.secondaire else 'Non spécifié'}
 - **Veille & Normes** : {', '.join(data.stack_metier.veille_et_normes) if data.stack_metier.veille_et_normes else 'Non spécifié'}
 
-## 🧠 Compétences Douces (Scores /10)
-- 🗣️ **Communication** : {data.competences_douces.communication}/10
-- 🤝 **Travail d'équipe** : {data.competences_douces.travail_equipe}/10
-- 🚀 **Autonomie** : {data.competences_douces.autonomie}/10
-- 👑 **Leadership** : {data.competences_douces.leadership}/10
+## 🧠 Compétences Douces (Preuves)
+- 🗣️ **Communication** : {data.competences_douces.communication}
+- 🤝 **Travail d'équipe** : {data.competences_douces.travail_equipe}
+- 🚀 **Autonomie** : {data.competences_douces.autonomie}
+- 👑 **Leadership** : {data.competences_douces.leadership}
 
 ## 🌍 Fit Culturel & Rayonnement
 - **Environnement idéal** : {data.fit_culturel}
