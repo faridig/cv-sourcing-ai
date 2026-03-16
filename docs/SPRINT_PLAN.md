@@ -1,44 +1,42 @@
-# 🚀 SPRINT EN COURS : Sprint 2 (Pipeline de Parsing haute fidélité)
+# 🚀 SPRINT EN COURS : Sprint 3 (Intelligence Latente & Augmentation)
 
-**Objectif du Sprint** : Extraire le texte des PDF stockés dans MinIO en respectant la mise en page (colonnes, titres) grâce à Docling.
-
-*(Règle méthodologique : Un seul PBI par Sprint pour une livraison continue et maîtrisée)*
+**Objectif du Sprint** : Transformer le texte brut des CV en dossiers structurés "augmentés" selon 8 axes d'analyse RH pour optimiser le matching IA.
 
 ---
 
-### [CHORE] Dette Technique : Nettoyage du Git Cache
-**Priorité** : Critical | **Estimation** : XS
-**Tâche préalable obligatoire pour le Lead-Dev avant de commencer le PBI-002.**
-- Exécuter la commande `git rm -r --cached .opencode openrtk` pour retirer ces dossiers du suivi Git (ils avaient été poussés lors d'un sprint précédent avant d'être ajoutés au `.gitignore`).
-- Commiter cette correction (`fix(git): nettoyage du cache des dossiers ignorés`).
+### [PBI-003] Structuration IA & Intelligence Latente (8 Axes)
+**Priorité** : High | **Estimation** : M
 
----
+**User Story** : "En tant que Système, je veux soumettre le texte extrait par Docling à un LLM avec un prompt d'expert RH, afin de générer une fiche candidat augmentée (Markdown) et des métadonnées (JSON) couvrant 8 axes d'analyse."
 
-### [PBI-002] Pipeline de Parsing (Extraction haute fidélité via Docling)
-**Priorité** : High | **Estimation** : S
-
-**User Story** : "En tant que Système, je veux extraire le texte d'un fichier PDF (récupéré depuis MinIO) en conservant la structure logique du document (colonnes, hiérarchie) grâce à Docling, afin de faciliter l'analyse ultérieure par l'IA."
-
-**Dépendances** : [PBI-001] (Upload MinIO)
+**Les 8 Axes à extraire** :
+1. Dynamique de Carrière (Séniorité/Progression)
+2. Culture Fit (Startup/Grand Compte/Agile)
+3. Rayonnement (Open Source/Side Projects/Engagement)
+4. Langues (Usage contextuel)
+5. Soft Skills (Scores 0-10 sur Leadership, Autonomie, etc.)
+6. Stack Technologique Hiérarchisée (Main/Secondary/Veille)
+7. Mobilité & Télétravail
+8. Signaux Faibles (Audit de cohérence par l'IA)
 
 **Critères d'Acceptation (Gherkin)** :
-- [ ] **Scenario 1** : Extraction structurée réussie
-  - **GIVEN** L'ID ou le chemin d'un PDF valide stocké dans MinIO
-  - **WHEN** Le système (backend) appelle le service de parsing avec cet ID
-  - **THEN** Le PDF est récupéré depuis MinIO
-  - **AND** **Docling** l'analyse et retourne une représentation Markdown ou texte qui respecte l'ordre de lecture des colonnes.
+- [ ] **Scenario 1** : Génération de la fiche augmentée
+  - **GIVEN** Un texte structuré issu de Docling (PBI-002)
+  - **WHEN** Le service d'analyse IA traite le texte
+  - **THEN** Un fichier Markdown est généré suivant le template "Dossier Augmenté".
+  - **AND** Les 8 axes sont présents et documentés.
 
-- [ ] **Scenario 2** : Performance et Robustesse
-  - **GIVEN** Un CV avec une mise en page complexe (2 ou 3 colonnes)
-  - **WHEN** Docling traite le fichier
-  - **THEN** Le texte extrait ne mélange pas les lignes des colonnes adjacentes.
+- [ ] **Scenario 2** : Préparation des métadonnées pour Qdrant
+  - **GIVEN** Un CV analysé
+  - **WHEN** Le système prépare l'objet final
+  - **THEN** Un objet JSON contenant les scores et les tags (Payload) est créé parallèlement au Markdown.
 
-- [ ] **Scenario 3** : Gestion des erreurs
-  - **GIVEN** Un fichier PDF corrompu
-  - **WHEN** Le système tente de l'extraire
-  - **THEN** Une exception propre est levée et journalisée.
+- [ ] **Scenario 3** : Robustesse du prompt
+  - **GIVEN** Un CV très court ou incomplet
+  - **WHEN** L'IA tente l'analyse
+  - **THEN** L'IA ne doit pas inventer d'informations (hallucination) mais marquer l'axe comme "Non déterminé" ou "Données insuffisantes".
 
-- [ ] **Scenario 4** : Hygiène et Nettoyage (Definition of Done)
-  - **GIVEN** Le Lead-Dev a généré des fichiers de test (Markdown factices, sorties brutes) pour valider Docling
-  - **WHEN** Le développement est terminé et prêt pour le commit final
-  - **THEN** Aucun de ces fichiers temporaires ou factices ne doit être présent dans le dépôt Git (vérification via `.gitignore` ou suppression manuelle).
+- [ ] **Scenario 4** : Gestion des coûts et tokens
+  - **GIVEN** L'utilisation de GPT-4o-mini
+  - **WHEN** L'appel API est effectué
+  - **THEN** Le prompt doit être optimisé pour minimiser la consommation de tokens tout en respectant la structure de sortie.
