@@ -1,0 +1,12 @@
+INFO:app.parser:Docling est correctement importé.
+INFO:     Started server process [637411]
+INFO:     Waiting for application startup.
+INFO:app.main:Démarrage du serveur Sourcing RH...
+INFO:app.main:Diagnostic : Docling est disponible.
+WARNING:app.main:Diagnostic : Analyzer IA non initialisé (OPENAI_API_KEY manquante ?) : OPENAI_API_KEY must be set.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8002 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [637411]

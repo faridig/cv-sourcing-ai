@@ -1,0 +1,11 @@
+INFO:app.parser:Docling est correctement importé.
+INFO:     Started server process [830358]
+INFO:     Waiting for application startup.
+INFO:app.main:Démarrage du serveur Sourcing RH (via lifespan)...
+INFO:app.main:Diagnostic : Docling est disponible.
+INFO:app.main:Diagnostic : Analyzer IA initialisé.
+INFO:     Application startup complete.
+ERROR:    [Errno 98] error while attempting to bind on address ('127.0.0.1', 8005): address already in use
+INFO:     Waiting for application shutdown.
+INFO:app.main:Fermeture du serveur Sourcing RH...
+INFO:     Application shutdown complete.

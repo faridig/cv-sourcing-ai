@@ -23,7 +23,6 @@ class DynamiqueCarriere(BaseModel):
     progression: str = Field(description="Analyse l'évolution des titres de postes pour déterminer la progression (ex: Analyste -> Data Scientist = Progression verticale ascendante). SI TROU DE 6 MOIS : le mentionner ici comme 'ALERTE'.")
     exposition_strategique: str = Field(description="Fait-il de l'exécution pure ou de la stratégie ? Justifie par un fait du CV.")
 
-
 class AuditRigueur(BaseModel):
     score_orthographe: str = Field(description="Évaluation de la qualité rédactionnelle. IGNORE les noms propres, les technologies et les langages informatiques. Pardonne les erreurs de fusion de mots dues à l'extraction PDF.")
     coherence_competences: str = Field(description="Vérifie si les technos citées correspondent aux dates/rôles. Démasque les mensonges probables.")
