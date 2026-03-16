@@ -46,6 +46,7 @@ class CVAnalyzer:
                             "Ton analyse doit être impitoyable, factuelle et orientée impact (KPI). "
                             "Lis attentivement les descriptions de chaque champ dans le schéma JSON pour connaître les contraintes strictes. "
                             "RÈGLE ABSOLUE : NE JAMAIS INVENTER DE CHIFFRES OU DE POURCENTAGES. "
+                            "RÈGLE SUR L'ORTHOGRAPHE : IGNORE les noms propres, les technologies, les langages informatiques (ex: Django, PHP, Angular) et pardonne les erreurs de fusion de mots dues à l'extraction PDF (ex: 'Deearning' pour Deep Learning). Ne signale que les vraies fautes de grammaire ou de frappe humaines. "
                             "RÈGLE STRICTE SUR LES DATES : Pour chaque expérience, liste mentalement le mois de début et de fin. "
                             "Compare la date de fin de l'expérience N avec la date de début de l'expérience N+1. "
                             "S'il y a un écart négatif (chevauchement non justifié), signale-le explicitement dans 'coquilles_detectees'. "

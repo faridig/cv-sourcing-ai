@@ -25,7 +25,7 @@ class DynamiqueCarriere(BaseModel):
 
 
 class AuditRigueur(BaseModel):
-    score_orthographe: str = Field(description="Évaluation impitoyable de la langue et de la mise en forme.")
+    score_orthographe: str = Field(description="Évaluation de la qualité rédactionnelle. IGNORE les noms propres, les technologies et les langages informatiques. Pardonne les erreurs de fusion de mots dues à l'extraction PDF.")
     coherence_competences: str = Field(description="Vérifie si les technos citées correspondent aux dates/rôles. Démasque les mensonges probables.")
     coquilles_detectees: List[str] = Field(
         description=(
@@ -39,10 +39,10 @@ class AuditRigueur(BaseModel):
 class AnalyseCV(BaseModel):
     dynamique_carriere: DynamiqueCarriere
     stack_metier: StackMetier
-    fit_culturel: str = Field(description="Startup, Grand Compte ou PME ? Justifie par l'historique. NE PAS deviner.")
+    fit_culturel: str = Field(description="Analyse du type d'environnement idéal (R&D, Opérationnel, International, Agile, etc.). Ne tire pas de conclusion hâtive sur la taille de l'entreprise (PME/Grand Groupe) si ce n'est pas explicitement spécifié. Justifie par les types de projets.")
     rayonnement: str = Field(description="Preuves publiques : GitHub, Blogs, Conférences. Si rien n'est écrit, écrire 'Néant'.")
     competences_douces: CompetencesDouces
-    langues: List[str] = Field(description="Langues et niveaux. NE PAS ajouter de langues non citées.")
+    langues: List[str] = Field(description="Langues et niveaux. Si la rubrique n'existe pas, déduis la langue principale utilisée dans la rédaction du CV.")
     localisation: str = Field(description="Ville et CP. Si absent : 'Inconnu'.")
     mobilite: str = Field(description="Mentionne UNIQUEMENT si spécifié (ex: 'Déplacement 50%'). Sinon 'Non précisé'.")
     signaux_faibles: str = Field(description="ZONE CRITIQUE : Analyse les anomalies, les durées trop courtes (<1 an) et les incohérences.")
