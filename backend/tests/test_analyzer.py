@@ -19,7 +19,12 @@ def mock_openai_response():
         },
         "fit_culturel": "Agile, Startup",
         "rayonnement": "Actif sur GitHub",
-        "competences_douces": {"leadership": 8, "autonomie": 9, "travail_equipe": 7, "communication": 8},
+        "competences_douces": {
+            "leadership": "A dirigé une équipe de 5 personnes", 
+            "autonomie": "Gestion complète du projet X", 
+            "travail_equipe": "Évolue en environnement Scrum", 
+            "communication": "Rédaction de rapports techniques"
+        },
         "langues": ["Français", "Anglais"],
         "localisation": "Paris, 75001",
         "mobilite": "Télétravail total",
@@ -55,7 +60,7 @@ def test_analyze_cv_success(mock_openai_class, mock_openai_response):
     # Assert
     assert isinstance(analysis, AnalyseCV)
     assert analysis.dynamique_carriere.seniorite == "Sénior"
-    assert analysis.competences_douces.leadership == 8
+    assert "équipe de 5 personnes" in analysis.competences_douces.leadership
     assert analysis.localisation == "Paris, 75001"
     assert "Dossier Augmenté" in markdown
     assert "Python" in analysis.stack_metier.principale

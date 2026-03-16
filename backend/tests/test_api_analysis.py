@@ -17,7 +17,12 @@ def mock_analysis_data():
         fit_culturel="Agile",
         rayonnement="None",
         langues=["English"],
-        competences_douces=CompetencesDouces(leadership=5, autonomie=5, travail_equipe=5, communication=5),
+        competences_douces=CompetencesDouces(
+            leadership="Preuve leadership", 
+            autonomie="Preuve autonomie", 
+            travail_equipe="Preuve équipe", 
+            communication="Preuve communication"
+        ),
         stack_metier=StackMetier(principale=["Python"], secondaire=[], veille_et_normes=[]),
         mobilite="Paris",
         signaux_faibles="None",

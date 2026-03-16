@@ -13,15 +13,16 @@ class StackMetier(BaseModel):
     )
 
 class CompetencesDouces(BaseModel):
-    leadership: int = Field(description="Score 0-10. Sois sévère. 0 si aucune preuve de management ou d'initiative.", ge=0, le=10)
-    autonomie: int = Field(description="Score 0-10. Basé sur les projets gérés seul. Pas de preuve = score faible.", ge=0, le=10)
-    travail_equipe: int = Field(description="Score 0-10. Basé sur les environnements collaboratifs cités.", ge=0, le=10)
-    communication: int = Field(description="Score 0-10. Basé sur les présentations, rapports ou rôles d'interface.", ge=0, le=10)
+    leadership: str = Field(description="Preuve concrète de leadership (ex: management, initiative). Si aucune preuve, écrire 'Aucune preuve explicite'.")
+    autonomie: str = Field(description="Preuve concrète d'autonomie (ex: gestion de projet en solo). Si aucune preuve, écrire 'Aucune preuve explicite'.")
+    travail_equipe: str = Field(description="Preuve concrète de travail d'équipe (ex: environnement collaboratif, agile). Si aucune preuve, écrire 'Aucune preuve explicite'.")
+    communication: str = Field(description="Preuve concrète de communication (ex: présentations, rapports). Si aucune preuve, écrire 'Aucune preuve explicite'.")
 
 class DynamiqueCarriere(BaseModel):
     seniorite: str = Field(description="Junior, Intermédiaire, Sénior, Lead, Expert. Basé sur les ANNÉES RÉELLES et responsabilités.")
-    progression: str = Field(description="Analyse de la trajectoire. SI TROU DE 6 MOIS : le mentionner ici comme 'ALERTE'.")
+    progression: str = Field(description="Analyse l'évolution des titres de postes pour déterminer la progression (ex: Analyste -> Data Scientist = Progression verticale ascendante). SI TROU DE 6 MOIS : le mentionner ici comme 'ALERTE'.")
     exposition_strategique: str = Field(description="Fait-il de l'exécution pure ou de la stratégie ? Justifie par un fait du CV.")
+
 
 class AuditRigueur(BaseModel):
     score_orthographe: str = Field(description="Évaluation impitoyable de la langue et de la mise en forme.")
