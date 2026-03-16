@@ -47,9 +47,7 @@ class CVAnalyzer:
                             "Lis attentivement les descriptions de chaque champ dans le schéma JSON pour connaître les contraintes strictes. "
                             "RÈGLE ABSOLUE : NE JAMAIS INVENTER DE CHIFFRES OU DE POURCENTAGES. "
                             "RÈGLE SUR L'ORTHOGRAPHE : IGNORE les noms propres, les technologies, les langages informatiques (ex: Django, PHP, Angular) et pardonne les erreurs de fusion de mots dues à l'extraction PDF (ex: 'Deearning' pour Deep Learning). Ne signale que les vraies fautes de grammaire ou de frappe humaines. "
-                            "RÈGLE STRICTE SUR LES DATES : Pour chaque expérience, liste mentalement le mois de début et de fin. "
-                            "Compare la date de fin de l'expérience N avec la date de début de l'expérience N+1. "
-                            "S'il y a un écart négatif (chevauchement non justifié), signale-le explicitement dans 'coquilles_detectees'. "
+                            "RÈGLE STRICTE SUR LES DATES (ATTENTION AU PIÈGE CHRONOLOGIQUE) : Les CV sont listés du plus récent au plus ancien. Une expérience qui se termine en '12/2015' et la suivante (plus bas) qui commence en '01/2016' est une suite logique parfaite, il n'y a AUCUN chevauchement. Ne signale une erreur QUE si deux périodes se superposent réellement sur plusieurs mois (ex: un poste de 2016 à 2018 en même temps qu'un autre de 2017 à 2019). "
                             "Si une information n'est pas explicitement présente dans le texte du CV, remplis le champ par 'Non spécifié' ou 'Aucune preuve explicite' selon le contexte. "
                             "Tu t'exprimes exclusivement en Français."
                         )

@@ -30,8 +30,9 @@ class AuditRigueur(BaseModel):
     coquilles_detectees: List[str] = Field(
         description=(
             "Liste exhaustive des fautes d'orthographe ou incohérences de dates. "
-            "RÈGLE STRICTE SUR LES DATES : Calcule mathématiquement les mois et années avant de signaler un chevauchement. "
-            "Ne signale pas de chevauchement si une expérience suit l'autre logiquement (ex: fin en Octobre, début en Octobre). "
+            "RÈGLE STRICTE SUR LES DATES (PIÈGE CHRONOLOGIQUE) : Les CV sont listés du plus récent au plus ancien. "
+            "Une expérience qui se termine en '12/2015' et la suivante qui commence en '01/2016' est une suite logique parfaite, il n'y a AUCUN chevauchement. "
+            "Ne signale une erreur QUE si deux périodes se superposent réellement sur plusieurs mois. "
             "Vide si parfait."
         )
     )
