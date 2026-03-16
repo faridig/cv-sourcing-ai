@@ -2,7 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 from unittest.mock import patch, MagicMock
 from app.main import app
-from app.models import AnalyseCV, DynamiqueCarriere, CompetencesDouces, StackMetier, AuditRigueur
+from app.models import AnalyseCV, DynamiqueCarriere, CompetencesDouces, StackMetier, AuditRigueur, CompetenceScore
 
 client = TestClient(app)
 
@@ -18,10 +18,10 @@ def mock_analysis_data():
         rayonnement="None",
         langues=["English"],
         competences_douces=CompetencesDouces(
-            leadership="Preuve leadership", 
-            autonomie="Preuve autonomie", 
-            travail_equipe="Preuve équipe", 
-            communication="Preuve communication"
+            leadership=CompetenceScore(score=5, preuve="Preuve leadership"), 
+            autonomie=CompetenceScore(score=5, preuve="Preuve autonomie"), 
+            travail_equipe=CompetenceScore(score=5, preuve="Preuve équipe"), 
+            communication=CompetenceScore(score=5, preuve="Preuve communication")
         ),
         stack_metier=StackMetier(principale=["Python"], secondaire=[], veille_et_normes=[]),
         mobilite="Paris",
