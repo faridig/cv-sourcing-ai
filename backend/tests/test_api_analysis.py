@@ -64,3 +64,16 @@ def test_analyze_cv_no_analyzer():
     response = client.post("/api/cv/analyze/test-uuid")
     assert response.status_code == 503
     assert "Service d'analyse IA non configuré" in response.json()["detail"]
+
+@patch("app.main.download_file")
+@patch("app.main.analyzer")
+def test_analyze_cv_not_found(mock_analyzer, mock_download):
+    # Simuler une ClientError de botocore (MinIO)
+    from botocore.exceptions import ClientError
+    error_response = {'Error': {'Code': 'NoSuchKey', 'Message': 'The specified key does not exist.'}}
+    mock_download.side_effect = ClientError(error_response, 'GetObject')
+    
+    response = client.post("/api/cv/analyze/non-existent-id")
+    
+    assert response.status_code == 404
+    assert "non trouvé" in response.json()["detail"]
