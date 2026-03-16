@@ -8,7 +8,8 @@ def test_model_descriptions_updated():
     audit_rigueur_schema = schema['$defs']['AuditRigueur']
     coquilles_desc = audit_rigueur_schema['properties']['coquilles_detectees']['description']
     assert "RÈGLE STRICTE SUR LES DATES" in coquilles_desc
-    assert "Calcule mathématiquement" in coquilles_desc
+    assert "PIÈGE CHRONOLOGIQUE" in coquilles_desc
+    assert "superposent réellement" in coquilles_desc
     
     # Check AnalyseCV resume rule
     resume_desc = schema['properties']['resume']['description']
